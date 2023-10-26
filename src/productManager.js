@@ -8,23 +8,29 @@ class ProductManager {
         fileSaveInit(this.path, this.products)
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, category ) {
+    async addProduct(title, description, price, thumbnail, code, stock, category) {
 
         this.products = await getJSONFromFile(this.path);
         let product = this.products.some(product => product.code === code);
         if (product) {
-            console.log('There is already a product with the identifier code');
-            return;
+            // console.log('There is already a product with the identifier code');
+            return {
+                status: 'Error',
+                description: 'There is already a product with the identifier code'
+            };
         }
 
         if (!title || !description || !price || !category || !code || stock === undefined) {
-            console.log('Complete product information is required');
-            return;
+            // console.log('Complete product information is required');
+            return {
+                status: 'Error',
+                description: 'Complete product information is required'
+            };
         }
 
         this.products.push({
-            id: this.products.length > 0 ? this.products[this.products.length - 1].id + 1 : 1,
-            // id: uuidV4(),
+            //id: this.products.length > 0 ? this.products[this.products.length - 1].id + 1 : 1,
+            id: uuidV4(),
             title: title,
             description: description,
             code: code,
@@ -35,7 +41,10 @@ class ProductManager {
             thumbnail: thumbnail
         });
         await saveJSONToFile(this.path, this.products);
-
+        return {
+            status: 'Success',
+            description: 'Product add successfully'
+        }
     }
 
     getProducts() {
@@ -45,35 +54,70 @@ class ProductManager {
     async getProductsById(id) {
         this.products = await getJSONFromFile(this.path);
         let product = this.products.find(product => product.id === id);
-        return product || `Producto con id: ${id} no existe`
+        return product || {
+            status: 'Error',
+            description: `Product with id: ${id} not found`
+        }
+
     }
 
     async updateProduct(id, obj) {
         this.products = await getJSONFromFile(this.path);
         let product = this.products.find(product => product.id === id);
+        if (!product) {
+           return  {
+                status: 'Error',
+                description: `Product with id: ${id} not found`
+            };
+        }
         const key = Object.keys(obj);
+        let validKey = true;
+        let invalidKeys = [];
         key.map((k) => {
-            (k in product) ? product[k] = obj[k] : console.error('NO existe la clave ', k)
+            if (k in product) {
+                product[k] = obj[k] 
+            }else{
+                invalidKeys.push(k);
+                validKey = false;
+            }
         });
-        await saveJSONToFile(this.path, this.products);
-        return product;
+
+        if (validKey) {
+            await saveJSONToFile(this.path, this.products);
+            return product;
+        }else{
+            return {
+                status: 'Error',
+                description: `keys invalids ${invalidKeys}`
+            };
+        }
+       
     }
 
     async deleteProduct(id) {
         this.products = await getJSONFromFile(this.path);
         if (this.products.length === 0) {
-            console.log('no existen productos para eliminar');
-            return;
+            // console.log('no existen productos para eliminar');
+            return {
+                status: 'Error',
+                description: 'no existen productos para eliminar'
+            };
         }
         let product = this.products.find(product => product.id === id);
         if (!product) {
-            console.log(`no existe el producto con id ${id} para eliminarlo`);
-            return `no existe el producto con id ${id} para eliminarlo`
+            // console.log(`no existe el producto con id ${id} para eliminarlo`);
+            return {
+                status: 'Error',
+                description: `Product with id ${id} not found`
+            };
         }
         let ind = this.products.indexOf(product);
         this.products.splice(ind, 1);
         await saveJSONToFile(this.path, this.products);
-        return;
+        return {
+            status: 'Success',
+            description: `Product with id ${id} successfully deleted`
+        };
     }
 
 }

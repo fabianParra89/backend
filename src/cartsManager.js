@@ -15,7 +15,7 @@ class CartsManager {
         this.carts = await getJSONFromFile(this.path);
         let _cart = this.carts.some(c => c.id === cart.id);
         if (_cart) {
-            console.log('There is already a cart with this id');
+            // console.log('There is already a cart with this id');
             return 'There is already a cart with this id';
         }
 
@@ -26,23 +26,37 @@ class CartsManager {
         return _cart;
     }
 
-    async addProductCartbyId(cartId, productId) {
+    async addProductCartbyId(cartId, productId, body) {
 
         this.carts = await getJSONFromFile(this.path);
         let _cart = this.carts.find(c => c.id === cartId);
         if (_cart) {
-            const product = _cart.products.find(p => p.id === productId);
-            if (product) {
-                product.quantity++;
+            const product1 = new ProductManager('../productos.json');
+            const products = await product1.getProducts();
+            const { quantity } = body;
+            // console.log(products);
+            const validateProducts = products.some(vp => vp.id === productId);
+            if (!validateProducts) {
+                return {
+                    status: 'Error',
+                    description: `Product with id: ${productId} not found`
+                };
+            }
+            const productCart = _cart.product.find(p => p.id === productId);
+            if (productCart) {
+                productCart.quantity += quantity;
             } else {
                 let newProduct = {
                     id: productId,
-                    quantity: 1
+                    quantity: quantity
                 }
-                _cart.products.push(newProduct)
+                _cart.product.push(newProduct)
             }
         } else {
-            console.log('no existe carrito');
+            return {
+                status: 'Error',
+                description: `Cart with id: ${cartId} not found`
+            };
         }
         await saveJSONToFile(this.path, this.carts);
         return _cart;
@@ -55,21 +69,35 @@ class CartsManager {
         if (cart) {
             const product1 = new ProductManager('../productos.json');
             const products = await product1.getProducts();
-            const cartProducts = cart.products;
+            const cartProducts = cart.product;
+            let validProduct = true;
+            let invalidProducts = [];
             cartProducts.forEach(cp => {
-
-                let productExist = products.find(p => p.id === parseInt(cp.id));
+                let productExist = products.find(p => p.id === cp.id);
                 if (productExist) {
                     listProduct.push({
                         ...productExist,
                         "quantity": cp.quantity
                     });
+                } else {
+                    validProduct = false;
+                    invalidProducts.push(cp.id);
                 }
-
             });
-            return listProduct;
+            if (validProduct) {
+                return listProduct;
+            } else {
+                return {
+                    status: 'Error',
+                    description: `Product with id: ${invalidProducts} not found in Products`
+                };
+            }
         } else {
-            return `cart con id: ${cartId} no existe`;
+            return {
+                status: 'Error',
+                description: `cart with id: ${cartId} not found`
+            };
+
         }
     }
 }

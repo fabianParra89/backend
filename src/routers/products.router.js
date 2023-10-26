@@ -24,8 +24,8 @@ router.get('/products/', async (req, res) => {
 router.get('/products/:pid/', async (req, res) => {
     const product1 = new ProductManager('../productos.json');
     const { pid } = req.params;
-    product = await product1.getProductsById(parseInt(pid));
-    res.json(product);
+    // product = await product1.getProductsById(parseInt(pid));
+    res.json(await product1.getProductsById(pid));
 });
 
 router.post('/products/', async (req, res) => {
@@ -34,25 +34,22 @@ router.post('/products/', async (req, res) => {
     const newProduct = {
         ...body,
     }
-
-    await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category)
-    res.status(201).json(newProduct)
+    res.status(201).json(await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category))
 });
 
 router.put('/products/:pid/', async (req, res) => {
     const product1 = new ProductManager('../productos.json')
     const { body } = req;
     const { pid } = req.params;
-    await product1.updateProduct(parseInt(pid), body)
-    product = await product1.getProductsById(parseInt(pid));
-    res.json(product);
+    // await product1.updateProduct(parseInt(pid), body);
+    res.json(await product1.updateProduct(pid, body));
 });
 
 router.delete('/products/:pid/', async (req, res) => {
     const product1 = new ProductManager('../productos.json')
     const { pid } = req.params;
-    await product1.deleteProduct(parseInt(pid));
-    res.json('metodo delete');
+    // await product1.deleteProduct(parseInt(pid));
+    res.json(await product1.deleteProduct(pid));
 });
 
 module.exports = router;
