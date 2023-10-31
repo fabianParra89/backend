@@ -119,5 +119,16 @@
 		"stock": 10,
 		"category": "categoria 4",
 		"thumbnail": "Sin imagen"
+	},
+	{
+		"id": "c95f1f6a-56f7-491a-9dc6-17f8cae35074",
+		"title": "producto prueba 3",
+		"description": "Este es un producto prueba 3",
+		"code": "abc131",
+		"price": 150,
+		"status": true,
+		"stock": 16,
+		"category": "categoria 2",
+		"thumbnail": "Sin imagen"
 	}
 ]

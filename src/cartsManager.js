@@ -1,9 +1,10 @@
-const { promises: fs } = require('fs');
-const { v4: uuidV4 } = require('uuid');
-const ProductManager = require('./productManager');
+import { promises as fs } from 'fs';
+// import { v4 as uuidV4 } from 'uuid';
+
+import ProductManager from './productManager.js';
 
 
-class CartsManager {
+export default class CartsManager {
     constructor(path, cart) {
         this.carts = cart;
         this.path = path;
@@ -31,7 +32,7 @@ class CartsManager {
         this.carts = await getJSONFromFile(this.path);
         let _cart = this.carts.find(c => c.id === cartId);
         if (_cart) {
-            const product1 = new ProductManager('../productos.json');
+            const product1 = new ProductManager('productos.json');
             const products = await product1.getProducts();
             const { quantity } = body;
             // console.log(products);
@@ -67,7 +68,7 @@ class CartsManager {
         let cart = this.carts.find(c => c.id === cartId);
         let listProduct = [];
         if (cart) {
-            const product1 = new ProductManager('../productos.json');
+            const product1 = new ProductManager('productos.json');
             const products = await product1.getProducts();
             const cartProducts = cart.product;
             let validProduct = true;
@@ -102,7 +103,7 @@ class CartsManager {
     }
 }
 
-module.exports = CartsManager;
+// module.exports = CartsManager;
 
 
 const saveJSONToFile = async (path, data) => {

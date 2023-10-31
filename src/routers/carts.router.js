@@ -1,6 +1,7 @@
-const { Router } = require('express');
-const CartsManager = require('../cartsManager');
-const { v4: uuidV4 } = require('uuid');
+import { Router } from 'express';
+import { v4 as uuidV4 } from 'uuid';
+
+import CartsManager from '../cartsManager.js';
 
 const router = Router();
 
@@ -9,14 +10,14 @@ router.post('/carts/', async (req, res) => {
         id: uuidV4(),
         product: []
     };
-    const cart1 = new CartsManager('../carrito.json', cart);
+    const cart1 = new CartsManager('carrito.json', cart);
 
     await cart1.addCart(cart);
     res.status(201).json(cart);
 });
 
 router.post('/carts/:cid/product/:pid/', async (req, res) => {
-    const cart1 = new CartsManager('../carrito.json');
+    const cart1 = new CartsManager('carrito.json');
     const { cid } = req.params;
     const { pid } = req.params;
     const { body } = req;
@@ -27,11 +28,11 @@ router.post('/carts/:cid/product/:pid/', async (req, res) => {
 });
 
 router.get('/carts/:cid/', async (req, res) => {
-    const cart1 = new CartsManager('../carrito.json');
+    const cart1 = new CartsManager('carrito.json');
     const { cid } = req.params;
     console.log(cid);
-    products = await cart1.getProductsCartsById(cid);
+    const products = await cart1.getProductsCartsById(cid);
     res.json(products);
 });
 
-module.exports = router;
+export default router;

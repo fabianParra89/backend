@@ -1,7 +1,8 @@
-const express = require('express');
-const { promises: fs } = require('fs');
-const productsRouter = require('./routers/products.router');
-const cartsRouter = require('./routers/carts.router');
+import express from 'express';
+// import { promises as fs } from 'fs';
+
+import productsRouter from './routers/products.router.js';
+import cartsRouter  from './routers/carts.router.js';
 
 const app = express()
 

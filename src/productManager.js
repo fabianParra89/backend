@@ -1,5 +1,5 @@
-const { promises: fs } = require('fs');
-const { v4: uuidV4 } = require('uuid');
+import { promises as fs } from 'fs';
+import { v4 as uuidV4 } from 'uuid';
 
 class ProductManager {
     constructor(path) {
@@ -122,7 +122,7 @@ class ProductManager {
 
 }
 
-module.exports = ProductManager;
+ export default ProductManager;
 
 
 const saveJSONToFile = async (path, data) => {
