@@ -1,0 +1,43 @@
+<div class="container-form-product">
+    <p class="titles">Ingrese la información del producto que se va a agregar al Menú</p>
+    <form id="form-product">
+        <div class="grid">
+            <input type="text" id="title" name="title" placeholder="titulo" required>
+            <input type="text" id="description" name="description" placeholder="description" required>
+            <input type="number" id="price" name="price" placeholder="price" required>
+            <input type="text" id="category" name="category" placeholder="category" required>
+        </div>
+        <div class="grid">
+            <input type="text" id="code" name="code" placeholder="code" required>
+            <input type="number" id="stock" name="stock" placeholder="stock" required>
+            <input type="text" id="thumbnail" name="thumbnail" placeholder="thumbnail" required>
+        </div>
+        <input type="submit" value="Crear producto">
+    </form>
+</div>
+
+
+<p class="titles">Productos actuales del menú</p>
+<div id="list-products">
+</div>
+<table id="table-products">
+    <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Id</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">precio</th>
+            <th scope="col">codigo</th>
+            <th scope="col">stock</th>
+            <th scope="col">estado</th>
+            <th scope="col">categoria</th>
+            <th scope="col">imagen</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>

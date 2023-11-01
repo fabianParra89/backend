@@ -15,8 +15,8 @@ router.get('/products/', async (req, res) => {
         res.json(products);
     } else {
         console.log(limit);
-        const fiveProducts = products.slice(0, parseInt(limit));
-        res.json(fiveProducts);
+        const limitProducts = products.slice(0, parseInt(limit));
+        res.json(limitProducts);
     }
 });
 
