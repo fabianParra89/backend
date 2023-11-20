@@ -6,10 +6,10 @@ import path from "path";
 
 import { __dirname } from './utils.js';
 console.log(__dirname);
-import productsRouter from './routers/products.router.js';
-import cartsRouter from './routers/carts.router.js';
-import indexRouter  from './routers/index.router.js';
-import realTimeProdcuts  from './routers/realTimeProducts.router.js';
+import productsRouter from './routers/api/products.router.js';
+import cartsRouter from './routers/api/carts.router.js';
+import indexRouter  from './routers/views/index.router.js';
+import realTimeProdcuts  from './routers/views/realTimeProducts.router.js';
 // import ProductManager from './productManager.js';
 
 // const product1 = new ProductManager('productos.json');

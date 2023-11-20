@@ -1,6 +1,6 @@
 import { Server } from 'socket.io'
 
-import ProductManager from './productManager.js';
+import ProductManager from './dao/Dao/productManager.js';
 let io;
 const product1 = new ProductManager('productos.json');
 let products = await product1.getProducts();

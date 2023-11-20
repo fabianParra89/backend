@@ -108,5 +108,16 @@
 		"stock": 15,
 		"status": true,
 		"category": "entrada"
+	},
+	{
+		"id": "1d0d94dd-fde1-4622-9ba2-bb84ae54be6c",
+		"title": "prueba desde postman",
+		"description": "prueba desde postman",
+		"code": "abc139",
+		"price": 150,
+		"status": true,
+		"stock": 16,
+		"category": "categoria 2",
+		"thumbnail": "Sin imagen"
 	}
 ]

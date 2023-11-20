@@ -1,10 +1,12 @@
 import { Router } from 'express';
 
-import ProductManager from '../productManager.js';
+import ProductManager from '../../dao/Dao/productManager.js';
+import ProductManagerDB from '../../dao/Dao/Products.manager.js';
 
 const router = Router();
-const product1 = new ProductManager('productos.json');
 
+//================================================================================================================================= 
+const product1 = new ProductManager('productos.json');
 router.get('/realtimeproducts', async (req, res) => {
     const { query } = req;
     const { limit } = query;
