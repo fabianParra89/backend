@@ -1,65 +1,14 @@
 import { Router } from 'express';
 
-import ProductManager from '../../dao/Dao/productManager.js';
-import ProductManagerDB from '../../dao/Dao/Products.manager.js';
+import ProductManager from '../../dao/Dao/Products.manager.js';
 
 const router = Router();
-// rutas file system
-// router.get('/products/', async (req, res) => {
-//     const { query } = req;
-//     const { limit } = query;
-
-//     const product1 = new ProductManager('productos.json');
-//     console.log(product1);
-//     const products = await product1.getProducts();
-//     if (!limit) {
-//         res.json(products);
-//     } else {
-//         console.log(limit);
-//         const limitProducts = products.slice(0, parseInt(limit));
-//         res.json(limitProducts);
-//     }
-// });
-
-router.get('/products/:pid/', async (req, res) => {
-    const product1 = new ProductManager('productos.json');
-    const { pid } = req.params;
-    // product = await product1.getProductsById(parseInt(pid));
-    res.json(await product1.getProductsById(pid));
-});
-
-// router.post('/products/', async (req, res) => {
-//     const product1 = new ProductManager('productos.json')
-//     const { body } = req;
-//     const newProduct = {
-//         ...body,
-//     }
-//     res.status(201).json(await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category))
-// });
-
-router.put('/products/:pid/', async (req, res) => {
-    const product1 = new ProductManager('productos.json')
-    const { body } = req;
-    const { pid } = req.params;
-    // await product1.updateProduct(parseInt(pid), body);
-    res.json(await product1.updateProduct(pid, body));
-});
-
-router.delete('/products/:pid/', async (req, res) => {
-    const product1 = new ProductManager('productos.json')
-    const { pid } = req.params;
-    // await product1.deleteProduct(parseInt(pid));
-    res.json(await product1.deleteProduct(pid));
-});
-
-//=====================================================================================================================================================
-// rutas MongoDB
 
 router.get('/products', async (req, res) => {
     const { query } = req;
     const { limit } = query;
 
-    const products = await ProductManagerDB.get();
+    const products = await ProductManager.get();
     console.log(products);
     if (!limit) {
         // res.json(products);
@@ -72,11 +21,34 @@ router.get('/products', async (req, res) => {
     }
 });
 
+router.get('/products/:pid/', async (req, res) => {
+    // const product1 = new ProductManager('productos.json');
+    const { pid } = req.params;
+    console.log(pid);
+    const returnGetById = await ProductManager.getById(pid);
+    res.status(returnGetById.statusCode).json((returnGetById.product) ? returnGetById.product : returnGetById);
+});
+
 router.post('/products', async (req, res) => {
     const { body } = req;
-    const prodcuts = await ProductManagerDB.create(body);
-    res.status(201).json(prodcuts);
-  });
+    const returnCreate = await ProductManager.create(body);
+    res.status(returnCreate.statusCode).json((returnCreate.product) ? returnCreate.product : returnCreate);
+});
 
+router.put('/products/:pid/', async (req, res) => {
+    
+    const { body } = req;
+    const { pid } = req.params;
+    const returnUpdate = await ProductManager.updateById(pid, body);
+    // await product1.updateProduct(parseInt(pid), body);
+    res.status(returnUpdate.statusCode).json(returnUpdate);
+});
+
+router.delete('/products/:pid/', async (req, res) => {
+    
+    const { pid } = req.params;
+    const returnDelete = await ProductManager.deleteById(pid);
+    res.status(returnDelete.statusCode).json(returnDelete);
+});
 
 export default router;
