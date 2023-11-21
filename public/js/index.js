@@ -108,29 +108,8 @@
       row.appendChild(colDelete);
 
       tableBody.appendChild(row);
-
-
-      // p.innerText = `${product.title}: ${product.price}`;
-      // listProducts.appendChild(p);
     });
   });
-  // Swal.fire({
-  //   title: 'Indentificate por favor 👮',
-  //   input: 'text',
-  //   allowOutsideClick: false,
-  //   inputValidator:(value) => {
-  //     if (!value) {
-  //       return 'Necesitamos que ingreses su username para continuar.'
-  //     }
-  //   }
-  // })
-  // .then((result) => {
-  //   username = result.value.trim();
-  //   console.log('username', username);
-  // })
-  // .catch((error) => {
-  //   console.error('Ah ocurrido un error al capturar el nombre 😨:',  error.message);
-  // });
 
 })();
 

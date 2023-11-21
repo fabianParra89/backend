@@ -5,6 +5,13 @@ let io;
 const product1 = new ProductManager('productos.json');
 let products = await product1.getProducts();
 
+const conversation = [
+  {
+      username:'Administrador',
+      body: 'Hola a la comunidad',
+  },
+]
+
 export const init = (httpServer) => {
   io = new Server(httpServer);
 
@@ -15,21 +22,35 @@ export const init = (httpServer) => {
     socketClient.emit('update-products', products);
 
     socketClient.on('new-product', async (newProduct) => {
-        // console.log(products);
-        await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category)
-        products = await product1.getProducts()
-        io.emit('update-products', products);
-      });
+      // console.log(products);
+      await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category)
+      products = await product1.getProducts()
+      io.emit('update-products', products);
+    });
 
-      socketClient.on('delete-product', async (productId) => {
-        console.log(productId);
-        await product1.deleteProduct(productId)
-        products = await product1.getProducts()
-        io.emit('update-products', products);
-      });
+    socketClient.on('delete-product', async (productId) => {
+      console.log(productId);
+      await product1.deleteProduct(productId)
+      products = await product1.getProducts()
+      io.emit('update-products', products);
+    });
+
+    socketClient.emit('update-conversation', conversation);
+
+    socketClient.on('new-message', (newMessage) => {
+      conversation.push(newMessage);
+      io.emit('update-conversation', conversation);
+    })
 
     // socketClient.emit('client-emit', { status: "ok" });
     // socketClient.broadcast.emit('broadcast-emit', { status: "ok" });
     // socketServer.emit('all-clients', { status: "ok" });
   });
+
+
 } 
+
+export const newMessageFromAPI = (newMessage) => {
+  conversation.push(newMessage);
+  io.emit('update-conversation', conversation);
+}
