@@ -1,3 +1,4 @@
+import cartModel from '../models/cart.model.js';
 import CartModel from '../models/cart.model.js';
 import ProductManager from './Products.manager.js';
 
@@ -17,7 +18,6 @@ export default class CartManager {
             const cart = await CartModel.findById(cartId);
             // console.log(_cart)
             if (cart) {
-
                 //     const product1 = new ProductManager('productos.json');
                 const products = await ProductManager.getById(productId);
                 const { quantity } = body;
@@ -30,26 +30,36 @@ export default class CartManager {
                         statusCode: 404
                     };
                 }
-
-                const cartCreado =   await CartModel.updateOne({ '_id': cartId }, { $push: { products: { idProduct: productId, quantity: quantity } } });
-
-                console.log(cartCreado);
-                //     const productCart = _cart.product.find(p => p.id === productId);
-                //     if (productCart) {
-                //         productCart.quantity += quantity;
-                //     } else {
-                //         let newProduct = {
-                //             id: productId,
-                //             quantity: quantity
-                //         }
-                //         _cart.product.push(newProduct)
-                //     }
-                return {
-                    cart: cart,
-                    status: 'Success',
-                    description: `Product with id ${productId} is add successfully`,
-                    statusCode: 200
-                };
+                const productInCarrito = await cartModel.find({ $and: [{ _id: cartId }, { 'products.idProduct': productId }] })
+                console.log(productInCarrito);
+                if (productInCarrito && productInCarrito.length > 0) {
+                    cart.products.forEach(prod => {
+                        if (prod.idProduct === productId) {
+                            prod.quantity += quantity;
+                        }
+                    });
+                    const updateProd = { 'products': cart.products };
+                    const updateQuantity = await CartModel.updateOne({ _id: cartId }, { $set: updateProd });
+                    return {
+                        cart: updateQuantity,
+                        message: "Product is updated successfully",
+                        status: "Success",
+                        statusCode: 200
+                    };
+                } else {
+                    const productNew = {
+                        idProduct: productId,
+                        quantity: quantity
+                    }
+                    console.log(productNew);
+                    const updateQuantity = await CartModel.updateOne({ _id: cartId }, { $push: { products: productNew } });
+                    return {
+                        cart: updateQuantity,
+                        message: "Product is added successfully",
+                        status: "Success",
+                        statusCode: 200
+                    };
+                }
             } else {
                 return {
                     status: 'Error',
@@ -57,7 +67,6 @@ export default class CartManager {
                     statusCode: 404
                 };
             }
-
 
         } catch (error) {
             return {
@@ -67,5 +76,69 @@ export default class CartManager {
             };
         }
 
+    }
+
+    static async getProductsCartsById(cartId) {
+        try {
+            const cart = await CartModel.findById(cartId);
+            if (!cart) {
+                return {
+                    status: 'Error',
+                    description: `Cart with id: ${cartId} not found`,
+                    statusCode: 404
+                };   
+            }
+            const productInCarrito = cart.products;
+            console.log(productInCarrito);
+            return {
+                products: productInCarrito,
+                message: 'oks',
+                status: "Success",
+                statusCode: 200
+            }; 
+        } catch (error) {
+            return {
+                message: error.message,
+                status: "Error",
+                statusCode: 400
+            };
+        }
+
+        // this.carts = await getJSONFromFile(this.path);
+        // let cart = this.carts.find(c => c.id === cartId);
+        // let listProduct = [];
+        // if (cart) {
+        //     const product1 = new ProductManager('productos.json');
+        //     const products = await product1.getProducts();
+        //     const cartProducts = cart.product;
+        //     let validProduct = true;
+        //     let invalidProducts = [];
+        //     cartProducts.forEach(cp => {
+        //         let productExist = products.find(p => p.id === cp.id);
+        //         if (productExist) {
+        //             listProduct.push({
+        //                 ...productExist,
+        //                 "quantity": cp.quantity
+        //             });
+        //         } else {
+        //             validProduct = false;
+        //             invalidProducts.push(cp.id);
+        //         }
+        //     });
+        //     if (validProduct) {
+        //         return listProduct;
+        //     } else {
+        //         return {
+        //             status: 'Error',
+        //             description: `Product with id: ${invalidProducts} not found in Products`
+        //         };
+        //     }
+        // } else {
+        //     return {
+        //         status: 'Error',
+        //         description: `cart with id: ${cartId} not found`
+        //     };
+
+        // }
     }
 }

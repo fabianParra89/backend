@@ -20,11 +20,9 @@ router.post('/carts/:cid/product/:pid/', async (req, res) => {
 });
 
 router.get('/carts/:cid/', async (req, res) => {
-    const cart1 = new CartsManager('carrito.json');
     const { cid } = req.params;
-    console.log(cid);
-    const products = await cart1.getProductsCartsById(cid);
-    res.json(products);
+    const products = await CartsManager.getProductsCartsById(cid);
+    res.status(products.statusCode).json(products);
 });
 
 export default router;
