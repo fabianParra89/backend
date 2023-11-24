@@ -103,42 +103,5 @@ export default class CartManager {
                 statusCode: 400
             };
         }
-
-        // this.carts = await getJSONFromFile(this.path);
-        // let cart = this.carts.find(c => c.id === cartId);
-        // let listProduct = [];
-        // if (cart) {
-        //     const product1 = new ProductManager('productos.json');
-        //     const products = await product1.getProducts();
-        //     const cartProducts = cart.product;
-        //     let validProduct = true;
-        //     let invalidProducts = [];
-        //     cartProducts.forEach(cp => {
-        //         let productExist = products.find(p => p.id === cp.id);
-        //         if (productExist) {
-        //             listProduct.push({
-        //                 ...productExist,
-        //                 "quantity": cp.quantity
-        //             });
-        //         } else {
-        //             validProduct = false;
-        //             invalidProducts.push(cp.id);
-        //         }
-        //     });
-        //     if (validProduct) {
-        //         return listProduct;
-        //     } else {
-        //         return {
-        //             status: 'Error',
-        //             description: `Product with id: ${invalidProducts} not found in Products`
-        //         };
-        //     }
-        // } else {
-        //     return {
-        //         status: 'Error',
-        //         description: `cart with id: ${cartId} not found`
-        //     };
-
-        // }
     }
 }

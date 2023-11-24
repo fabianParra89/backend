@@ -1,5 +1,5 @@
 (function () {
-    let username;
+    let user;
     const socket = io();
 
     const main = document.getElementById('main');
@@ -12,8 +12,8 @@
         event.preventDefault();
         const input = document.getElementById('input-message');
         const newMessage = {
-          username,
-          body: input.value,
+          user,
+          message: input.value,
         };
         socket.emit('new-message', newMessage);
         input.value = '';
@@ -26,7 +26,7 @@
       logMessages.innerText = '';
       conversation.forEach((message) => {
         const p = document.createElement('p');
-        p.innerText = `${message.username}: ${message.body}`;
+        p.innerText = `${message.user}: ${message.message}`;
         logMessages.appendChild(p);
       });
     });
@@ -42,8 +42,8 @@
       }
     })
     .then((result) => {
-      username = result.value.trim();
-      console.log('username', username);
+      user = result.value.trim();
+      console.log('username', user);
     })
     .catch((error) => {
       console.error('Ah ocurrido un error al capturar el nombre 😨:',  error.message);
