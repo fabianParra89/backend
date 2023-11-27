@@ -30,11 +30,11 @@ export default class CartManager {
                         statusCode: 404
                     };
                 }
-                const productInCarrito = await cartModel.find({ $and: [{ _id: cartId }, { 'products.idProduct': productId }] })
+                const productInCarrito = await cartModel.find({ $and: [{ _id: cartId }, { 'products.product': productId }] })
                 console.log(productInCarrito);
                 if (productInCarrito && productInCarrito.length > 0) {
                     cart.products.forEach(prod => {
-                        if (prod.idProduct === productId) {
+                        if (prod.product === productId) {
                             prod.quantity += quantity;
                         }
                     });
@@ -48,7 +48,7 @@ export default class CartManager {
                     };
                 } else {
                     const productNew = {
-                        idProduct: productId,
+                        product: productId,
                         quantity: quantity
                     }
                     console.log(productNew);
@@ -80,7 +80,11 @@ export default class CartManager {
 
     static async getProductsCartsById(cartId) {
         try {
-            const cart = await CartModel.findById(cartId);
+           
+            const cart = await CartModel.findOne({_id: cartId}).populate('products.product').lean();
+            
+           //  const cart = await CartModel.findById(cartId);
+            console.log('CART',cart);
             if (!cart) {
                 return {
                     status: 'Error',
@@ -105,3 +109,6 @@ export default class CartManager {
         }
     }
 }
+
+
+  
