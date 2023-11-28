@@ -35,3 +35,10 @@ th {
     vertical-align: middle;
     /* Centra verticalmente */
 }
+
+.card-products{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}

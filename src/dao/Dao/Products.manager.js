@@ -1,8 +1,8 @@
 import ProductModel from '../models/prodcut.model.js';
 
 export default class ProductsManager {
-    static get() {
-        return ProductModel.find();
+    static async get(criterio, options) {
+        return await ProductModel.paginate(criterio, options);
     }
 
     static async getById(id) {

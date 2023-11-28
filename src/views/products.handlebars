@@ -1,0 +1,70 @@
+<h1>Lista de estudiantes</h1>
+
+<article>
+    {{!-- <table> --}}
+        {{!-- <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">precio</th>
+            <th scope="col">codigo</th>
+            <th scope="col">stock</th>
+            <th scope="col">estado</th>
+            <th scope="col">categoria</th>
+            <th scope="col">imagen</th>
+        </tr>
+        <tbody> --}}
+            <div class="card-products">
+
+
+                {{#each payload}}
+
+                {{!-- <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="{{this.thumbnail}}" alt="{{this.title}}" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.title}}</h5>
+                                <p class="card-text">{{this.description}}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{this.category}}</li>
+                                <li class="list-group-item">${{this.price}}</li>
+                                <li class="list-group-item">{{this.stock}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> --}}
+                <div class="card" style="width: 18rem;">
+                    <img src="{{this.thumbnail}}" alt="{{this.title}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.title}}</h5>
+                        <p class="card-text">{{this.description}}</p>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">{{this.category}}</li>
+                        <li class="list-group-item">${{this.price}}</li>
+                        <li class="list-group-item">{{this.stock}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="btn btn-primary">agregar al carrito</a>
+                    </div>
+                </div>
+                {{!-- <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>${{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this.category}}</td>
+                    <td><img class="img-product" src="{{this.thumbnail}}" alt="{{this.title}}"></td>
+                </tr> --}}
+                {{/each}}
+            </div>
+        {{!-- </tbody> --}}
+    {{!-- </table> --}}
+    <p>Página actual: {{page}}</p>
+    <a href="{{prevLink}}" role="button" {{#unless hasPrevPage}}disabled{{/unless}}>Anterior</a>
+    <a href="{{nextLink}}" role="button" {{#unless hasNextPage}}disabled{{/unless}}>Siguiente</a>
+</article>

@@ -12,6 +12,6 @@ const ProductSchema = new mongoose.Schema({
   category: { type: String, required: false },
 }, { timestamps: true });
 
-studentSchema.plugin(mongoosePaginate);
+ProductSchema.plugin(mongoosePaginate);
 
 export default mongoose.model('Product', ProductSchema);

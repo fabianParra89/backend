@@ -1,24 +1,36 @@
 import { Router } from 'express';
 
 import ProductManager from '../../dao/Dao/Products.manager.js';
+import { buildResponsePaginated } from '../../utils.js';
 
 const router = Router();
 
 router.get('/products', async (req, res) => {
     const { query } = req;
-    const { limit } = query;
+    const { limit = 10, page = 1, sort, search } = query;
 
-    const products = await ProductManager.get();
-    console.log(products);
-    if (!limit) {
-        // res.json(products);
-        res.status(200).json(products);
-    } else {
-        console.log(limit);
-        const limitProducts = products.slice(0, parseInt(limit));
-        // res.json(limitProducts);
-        res.status(200).json(limitProducts);
+    // const products = await ProductManager.get();
+    // console.log(products);
+    const cirterio = {};
+    const options = { limit, page };
+
+    if (sort) {
+        options.sort = { price: sort };
     }
+    if (search) {
+        cirterio.category = search;
+    }
+    const result = await ProductManager.get(cirterio, options);
+    res.status(200).json(buildResponsePaginated({ ...result, sort, search }));
+    // if (!limit) {
+    //     // res.json(products);
+    //     res.status(200).json(products);
+    // } else {
+    //     console.log(limit);
+    //     const limitProducts = products.slice(0, parseInt(limit));
+    //     // res.json(limitProducts);
+    //     res.status(200).json(limitProducts);
+    // }
 });
 
 router.get('/products/:pid/', async (req, res) => {
@@ -36,7 +48,7 @@ router.post('/products', async (req, res) => {
 });
 
 router.put('/products/:pid/', async (req, res) => {
-    
+
     const { body } = req;
     const { pid } = req.params;
     const returnUpdate = await ProductManager.updateById(pid, body);
@@ -45,7 +57,7 @@ router.put('/products/:pid/', async (req, res) => {
 });
 
 router.delete('/products/:pid/', async (req, res) => {
-    
+
     const { pid } = req.params;
     const returnDelete = await ProductManager.deleteById(pid);
     res.status(returnDelete.statusCode).json(returnDelete);

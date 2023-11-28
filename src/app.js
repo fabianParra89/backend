@@ -10,6 +10,7 @@ import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
 import indexRouter  from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
+import products from './routers/views/products.router.js';
 
 import realTimeProdcuts  from './routers/views/realTimeProducts.router.js';
 // import ProductManager from './productManager.js';
@@ -26,9 +27,12 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
-app.use('/', indexRouter, realTimeProdcuts);
+app.use('/', indexRouter, realTimeProdcuts, products);
 app.use('/chat',  messagesRouter);
 app.use('/api', productsRouter, cartsRouter);
+
+express.static.mime.types['.css'] = 'text/css';
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 app.use((error, req, res, next) => {
     const message = 'ocurrio un error desconocido: '+error.message;

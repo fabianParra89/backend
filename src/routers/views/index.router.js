@@ -28,7 +28,8 @@ router.get('', async (req, res) => {
     const { query } = req;
     const { limit } = query;
 
-    const product1 = await ProductManagerDB.get();
+    const response = await ProductManagerDB.get();
+    const product1 = response.docs;
     console.log(product1);
     if (!limit) {
         // res.json(products);
