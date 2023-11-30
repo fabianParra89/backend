@@ -23,4 +23,6 @@ router.get('/products', async (req, res) => {
   res.render('products', { title: 'Coder House Admin', ...data });
 });
 
+
+
 export default router;

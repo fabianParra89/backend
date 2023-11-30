@@ -16,7 +16,7 @@ export default class CartsManager {
         this.carts = await getJSONFromFile(this.path);
         let _cart = this.carts.some(c => c.id === cart.id);
         if (_cart) {
-            // console.log('There is already a cart with this id');
+
             return 'There is already a cart with this id';
         }
 
@@ -35,7 +35,6 @@ export default class CartsManager {
             const product1 = new ProductManager('productos.json');
             const products = await product1.getProducts();
             const { quantity } = body;
-            // console.log(products);
             const validateProducts = products.some(vp => vp.id === productId);
             if (!validateProducts) {
                 return {

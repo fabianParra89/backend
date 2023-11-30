@@ -1,0 +1,27 @@
+<h1>Carrito de compras</h1>
+
+<article>
+    <div class="card-products">
+
+        {{#each prodInCart}}
+    
+        <div class="card" style="width: 18rem;">
+            <img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{this.product.title}}</h5>
+                <p class="card-text">{{this.product.description}}</p>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Categoria {{this.product.category}}</li>
+                <li class="list-group-item">Precio ${{this.product.price}}</li>
+                <li class="list-group-item">Cantidad {{this.quantity}}</li>
+
+            </ul>
+            {{!-- <div class="card-body">
+                <a href="#" class="btn btn-primary">agregar al carrito</a>
+            </div> --}}
+        </div>
+        {{/each}}
+    </div>
+</article>

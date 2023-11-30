@@ -8,20 +8,6 @@ let conversation = [];
 const product1 = new ProductManager('productos.json');
 let products = await product1.getProducts();
 
-// const messagesDB =  MessageManager.getConversation();
-// console.log(messagesDB);
-// console.log(messagesDB.length);
-// if (messagesDB.length > 0) {
-//   console.log('+++++++++++++++++++++++');
-//   conversation = messagesDB;
-// } else {
-//   console.log('-------------------------');
-//   const initialMessage = {
-//     username: 'Administrador',
-//     body: 'Hola a la comunidad',
-//   }
-//   conversation.push(initialMessage);
-// }
 
 const initialMessage = [{
   user: 'Administrador',
@@ -40,7 +26,6 @@ export const init = (httpServer) => {
     socketClient.emit('update-products', products);
 
     socketClient.on('new-product', async (newProduct) => {
-      // console.log(products);
       await product1.addProduct(newProduct.title, newProduct.description, newProduct.price, newProduct.thumbnail, newProduct.code, newProduct.stock, newProduct.category)
       products = await product1.getProducts()
       io.emit('update-products', products);

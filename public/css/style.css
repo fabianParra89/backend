@@ -36,9 +36,16 @@ th {
     /* Centra verticalmente */
 }
 
-.card-products{
+.card-products {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+}
+
+.container-pagination {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center
 }

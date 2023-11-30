@@ -13,7 +13,6 @@ class ProductManager {
         this.products = await getJSONFromFile(this.path);
         let product = this.products.some(product => product.code === code);
         if (product) {
-            // console.log('There is already a product with the identifier code');
             return {
                 status: 'Error',
                 description: 'There is already a product with the identifier code'
@@ -21,7 +20,6 @@ class ProductManager {
         }
 
         if (!title || !description || !price || !category || !code || stock === undefined) {
-            // console.log('Complete product information is required');
             return {
                 status: 'Error',
                 description: 'Complete product information is required'
@@ -97,7 +95,6 @@ class ProductManager {
     async deleteProduct(id) {
         this.products = await getJSONFromFile(this.path);
         if (this.products.length === 0) {
-            // console.log('no existen productos para eliminar');
             return {
                 status: 'Error',
                 description: 'no existen productos para eliminar'
@@ -105,7 +102,7 @@ class ProductManager {
         }
         let product = this.products.find(product => product.id === id);
         if (!product) {
-            // console.log(`no existe el producto con id ${id} para eliminarlo`);
+
             return {
                 status: 'Error',
                 description: `Product with id ${id} not found`

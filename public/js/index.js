@@ -49,7 +49,7 @@
     const tableProducts = document.getElementById('table-products');
     const tableBody = tableProducts.querySelector("tbody");
     tableBody.innerText = '';
-    console.log('products', products);
+
     products.forEach((product) => {
       const row = document.createElement('tr');
 

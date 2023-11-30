@@ -11,7 +11,6 @@ router.get('/realtimeproducts', async (req, res) => {
     const { query } = req;
     const { limit } = query;
     const products = await product1.getProducts();
-    // console.log(products);
     res.render('realTimeProducts', { title: 'Coder House 🚀', name:'fabian parra'});
 });
 

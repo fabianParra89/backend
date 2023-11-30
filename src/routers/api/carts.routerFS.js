@@ -23,14 +23,12 @@ router.post('/carts/:cid/product/:pid/', async (req, res) => {
     const { body } = req;
     
     const cartID = await cart1.addProductCartbyId(cid, pid, body);
-    console.log(cartID);
     res.status(201).json(cartID);
 });
 
 router.get('/carts/:cid/', async (req, res) => {
     const cart1 = new CartsManager('carrito.json');
     const { cid } = req.params;
-    console.log(cid);
     const products = await cart1.getProductsCartsById(cid);
     res.json(products);
 });

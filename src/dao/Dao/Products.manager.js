@@ -8,7 +8,6 @@ export default class ProductsManager {
     static async getById(id) {
         try {
             const product = await ProductModel.findById(id);
-            console.log(product);
             if (product) {
                 return {
                     product: product,
@@ -37,7 +36,7 @@ export default class ProductsManager {
         try {
             const { code } = data;
             const productByCode = await ProductModel.findOne({ 'code': code });
-            console.log(productByCode);
+
 
             if (productByCode) {
                 return {
@@ -77,7 +76,6 @@ export default class ProductsManager {
                 };
             }
             const productUpdated = await ProductModel.updateOne({ _id: pid }, { $set: data });
-            console.log(productUpdated);
             console.log(`Product successfully updated (${pid}) 😁.`);
             return {
                 message: "Product successfully updated",

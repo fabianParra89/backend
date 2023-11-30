@@ -32,15 +32,10 @@ router.get('', async (req, res) => {
     const product1 = response.docs;
     console.log(product1);
     if (!limit) {
-        // res.json(products);
-        // res.status(200).json(products);
         const products = product1;
         res.render('home', { title: 'Coder House 🚀', products: products.map(prodcut =>prodcut.toJSON()) });
     } else {
-        console.log(limit);
         const products = product1.slice(0, parseInt(limit));
-        // res.json(limitProducts);
-        // res.status(200).json(limitProducts);
         res.render('home', { title: 'Coder Hous-rty 🚀', products: products.map(prodcut =>prodcut.toJSON()) });
     }
 });

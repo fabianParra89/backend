@@ -8,12 +8,10 @@ router.get('/products/', async (req, res) => {
     const { limit } = query;
 
     const product1 = new ProductManager('productos.json');
-    console.log(product1);
     const products = await product1.getProducts();
     if (!limit) {
         res.json(products);
     } else {
-        console.log(limit);
         const limitProducts = products.slice(0, parseInt(limit));
         res.json(limitProducts);
     }

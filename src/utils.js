@@ -7,7 +7,6 @@ export const __dirname = path.dirname(__filename);
 export const URL_BASE = 'http://localhost:8080/api';
 
 export const buildResponsePaginated = (data, baseUrl = URL_BASE) => {
-    console.log(data);
     const {docs, totalPages,prevPage, nextPage, page, hasPrevPage, hasNextPage, sort, limit, search} = data
     return {
       //status:success/error

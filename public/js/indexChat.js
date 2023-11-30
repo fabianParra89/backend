@@ -21,7 +21,7 @@
       });
   
     socket.on('update-conversation', (conversation) => {
-      console.log('conversation', conversation);
+
       const logMessages = document.getElementById('log-messages');
       logMessages.innerText = '';
       conversation.forEach((message) => {
@@ -43,7 +43,7 @@
     })
     .then((result) => {
       user = result.value.trim();
-      console.log('username', user);
+
     })
     .catch((error) => {
       console.error('Ah ocurrido un error al capturar el nombre 😨:',  error.message);
