@@ -11,16 +11,20 @@ router.get('/products', async (req, res) => {
   // search esta asociado al campo group
   const criterio = {};
   const options = { limit, page };
-  if (sort) { 
+  if (sort) {
     options.sort = { price: sort };
   }
   if (search) {
     criterio.category = search;
   }
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  const { user } = req.session;
   const result = await ProductManager.get(criterio, options);
   const baseUrl = 'http://localhost:8080';
   const data = buildResponsePaginated({ ...result, sort, search }, baseUrl);
-  res.render('products', { title: 'Coder House Admin', ...data });
+  res.render('products', { title: 'Coder House Admin', ...data, user: user });
 });
 
 
