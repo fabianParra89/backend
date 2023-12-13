@@ -1,9 +1,22 @@
 import { Router } from 'express';
 import UserModel from '../../dao/models/user.model.js';
+import {createHash, isValidPassword} from '../../utils.js'
+import passport from 'passport';
 
 const router = Router();
 
-router.post('/sessions/login', async(req, res) => {
+router.post('/sessions/login',passport.authenticate('login', {failureRedirect: '/login'}), async(req, res) => {
+  console.log('req.user', req.user);
+  res.redirect('/products');
+});
+
+router.post('/sessions/register', passport.authenticate('register', {failureRedirect: '/register'}), async (req, res) => {
+  // req.session.user = req.user;
+ 
+  res.redirect('/login');
+});
+
+router.post('/sessions/recovery-password', async (req, res) => {
   const { body: { email, password } } = req;
   if (!email || !password) {
     //return res.status(400).json({ message: 'Todos los campos son requeridos.' });
@@ -14,71 +27,8 @@ router.post('/sessions/login', async(req, res) => {
     //return res.status(401).json({ message: 'Correo o contraseña invalidos.' });
     return res.render('error', { title: 'Hello People 🖐️', messageError: 'Correo o contraseña invalidos.' });
   }
-  if (user.password !== password) {
-    //return res.status(401).json({ message: 'Correo o contraseña invalidos.' });
-    return res.render('error', { title: 'Hello People 🖐️', messageError: 'Correo o contraseña invalidos.' });
-  }
-  let {
-    first_name,
-    last_name,
-    age,
-    role,
-  } = user;
- 
-  if(email === "adminCoder@coder.com" && password ==="adminCod3r123"){
-    role = "admin";
-  }
- 
-  req.session.user = {
-    first_name,
-    last_name,
-    email,
-    age,
-    role,
-  };
- 
-  const limit = 10;
-  const page = 1;
-  const sort = "desc";
-  const search = "";
- 
-  req.query = {
-    limit,
-    page,
-    sort,
-    search,
-  };
- 
-  res.redirect('/products');
-});
-
-router.post('/sessions/register', async (req, res) => {
-  const {
-    body: {
-      first_name,
-      last_name,
-      email,
-      password,
-      age,
-    },
-  } = req;
-  if (
-    !first_name ||
-    !last_name ||
-    !email ||
-    !password
-  ) {
-   //return  res.status(400).json({ message: 'Todos los campos son requeridos.' });
-   return res.render('error', { title: 'Hello People 🖐️', messageError: 'Todos los campos son requeridos.' });
-  }
-  const user = await UserModel.create({
-    first_name,
-    last_name,
-    email,
-    password,
-    age,
-  });
-  //res.status(201).json(user);
+  user.password = createHash(password);
+  await UserModel.updateOne({ email }, user);
   res.redirect('/login');
 });
 

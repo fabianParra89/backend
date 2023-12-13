@@ -17,14 +17,14 @@ router.get('/products', async (req, res) => {
   if (search) {
     criterio.category = search;
   }
-  if (!req.session.user) {
+  if (!req.user) {
     return res.redirect('/login');
   }
-  const { user } = req.session;
+  
   const result = await ProductManager.get(criterio, options);
   const baseUrl = 'http://localhost:8080';
   const data = buildResponsePaginated({ ...result, sort, search }, baseUrl);
-  res.render('products', { title: 'Coder House Admin', ...data, user: user });
+  res.render('products', { title: 'Coder House Admin', ...data, user: req.user.toJSON() });
 });
 
 

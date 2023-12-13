@@ -10,10 +10,10 @@ router.get('/', (req, res) => {
 });
 
 router.get('/profile', (req, res) => {
-    if (!req.session.user) {
+    if (!req.user) {
         return res.redirect('/login');
     }
-    res.render('profile', { title: 'Hello People 🖐️', user: req.session.user });
+    res.render('profile', { title: 'Hello People 🖐️', user: req.user.toJSON() });
 });
 
 router.get('/login', (req, res) => {
@@ -23,6 +23,10 @@ router.get('/login', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('register', { title: 'Hello People 🖐️' });
 });
+
+router.get('/recovery-password', (req,res) => {
+    res.render('recovery-password', { title: 'Hello People 🖐️' });
+  });
 
 export default router;
 

@@ -4,6 +4,7 @@ import handlebars from "express-handlebars";
 import path from "path";
 import sessions from "express-session"
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
 
 
 
@@ -12,16 +13,14 @@ import { URI } from "./db/mongodb.js";
 // (__dirname);
 import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
-
-import sessionsRouter from './routers/views/sessions.router.js';
 import userRouter from './routers/api/users.router.js';
 
 import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
-
+import sessionsRouter from './routers/views/sessions.router.js';
 import products from './routers/views/products.router.js';
 import cartsViewRouter from './routers/views/cart.router.js';
-
+import { init as initPasport } from "./config/passport.config.js";
 
 
 import realTimeProdcuts from './routers/views/realTimeProducts.router.js';
@@ -29,7 +28,7 @@ import realTimeProdcuts from './routers/views/realTimeProducts.router.js';
 
 const app = express()
 
-const SSESION_SECRET = 'ejUrAe7$7fJA^vEpBeZP%HqDK9i$V3ft';
+const SESSION_SECRET = 'ejUrAe7$7fJA^vEpBeZP%HqDK9i$V3ft';
 
 app.use(sessions({
     store: MongoStore.create({
@@ -37,7 +36,7 @@ app.use(sessions({
         mongoOptions: {},
         ttl: 60*30,
     }),
-    secret: SSESION_SECRET,
+    secret: SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
 }));
@@ -50,6 +49,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
+
+initPasport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter);
 app.use('/chat', messagesRouter);
