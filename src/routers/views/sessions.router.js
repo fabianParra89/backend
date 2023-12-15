@@ -1,18 +1,18 @@
 import { Router } from 'express';
 import UserModel from '../../dao/models/user.model.js';
-import {createHash, isValidPassword} from '../../utils.js'
+import { createHash, isValidPassword } from '../../utils.js'
 import passport from 'passport';
 
 const router = Router();
 
-router.post('/sessions/login',passport.authenticate('login', {failureRedirect: '/login'}), async(req, res) => {
+router.post('/sessions/login', passport.authenticate('login', { failureRedirect: '/login' }), async (req, res) => {
   console.log('req.user', req.user);
   res.redirect('/products');
 });
 
-router.post('/sessions/register', passport.authenticate('register', {failureRedirect: '/register'}), async (req, res) => {
+router.post('/sessions/register', passport.authenticate('register', { failureRedirect: '/register' }), async (req, res) => {
   // req.session.user = req.user;
- 
+
   res.redirect('/login');
 });
 
@@ -47,5 +47,12 @@ router.get('/session/logout', (req, res) => {
     res.redirect('/login');
   });
 })
+
+router.get('/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+router.get('/sessions/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
+  console.log('req.user', req.user);
+  res.redirect('/products');
+});
 
 export default router;
