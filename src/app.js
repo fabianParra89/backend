@@ -5,6 +5,7 @@ import path from "path";
 import sessions from "express-session"
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
+import cookieParse from 'cookie-parser';
 
 
 
@@ -14,6 +15,7 @@ import { URI } from "./db/mongodb.js";
 import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
 import userRouter from './routers/api/users.router.js';
+import authRouter from './routers/api/auth.router.js';
 
 import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
@@ -41,6 +43,7 @@ app.use(sessions({
     saveUninitialized: true,
 }));
 
+app.use(cookieParse())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -56,7 +59,7 @@ app.use(passport.session());
 
 app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter);
 app.use('/chat', messagesRouter);
-app.use('/api', productsRouter, cartsRouter, sessionsRouter,userRouter);
+app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter);
 
 express.static.mime.types['.css'] = 'text/css';
 app.use('/public', express.static(path.join(__dirname, '../public')));

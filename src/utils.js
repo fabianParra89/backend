@@ -1,11 +1,15 @@
 import path from 'path';
 import url from 'url';
 import bcrypt from 'bcrypt';
+import JWT from 'jsonwebtoken';
+import passport from 'passport';
 
 const __filename = url.fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
 export const URL_BASE = 'http://localhost:8080/api';
+
+ export const JWT_SECRET = 'uy6!#N_dyJ$r{6JE4u0px=A\NTAFX.\Y';
 
 export const buildResponsePaginated = (data, baseUrl = URL_BASE) => {
   const { docs, totalPages, prevPage, nextPage, page, hasPrevPage, hasNextPage, sort, limit, search } = data
@@ -36,4 +40,50 @@ export const buildResponsePaginated = (data, baseUrl = URL_BASE) => {
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 export const isValidPassword = (password, user) => bcrypt.compareSync(password, user.password);
+
+export const generateToken = (user) => {
+  const payload = {
+    id: user._id,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
+    role: user.role,
+  };
+  return JWT.sign(payload, JWT_SECRET, { expiresIn: '1m' });
+};
+
+export const verifyToken = (token) => {
+  return new Promise((resolve) => {
+    JWT.verify(token, JWT_SECRET, (error, payload) => {
+      if (error) {
+        return resolve(false);
+      }
+      resolve(payload);
+    });
+  });
+};
+
+export const authMiddleware = (strategy) => (req, res, next) => {
+  passport.authenticate(strategy, function (error, payload, info) {
+    if (error) {
+      return next(error);
+    }
+    if (!payload) {
+      return res.status(401).json({ message: info.message ? info.message : info.toString() });
+    }
+    req.user = payload;
+    next();
+  })(req, res, next);
+};
+
+export const authRolesMiddleware = (role) => (req, res, next) => {
+  if(!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  const { role : userRole } = req.user;
+  if (userRole !== role) {
+    return res.status(403).json({ message: 'No permissions' });
+  }
+  next();
+};
 
