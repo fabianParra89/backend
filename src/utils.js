@@ -4,12 +4,13 @@ import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
 import passport from 'passport';
 
+import config from './config/config.js';
+
 const __filename = url.fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
-export const URL_BASE = 'http://localhost:8080/api';
-
- export const JWT_SECRET = 'uy6!#N_dyJ$r{6JE4u0px=A\NTAFX.\Y';
+export const URL_BASE = config.url_base;
+export const JWT_SECRET = config.jwt_secret;
 
 export const buildResponsePaginated = (data, baseUrl = URL_BASE) => {
   const { docs, totalPages, prevPage, nextPage, page, hasPrevPage, hasNextPage, sort, limit, search } = data

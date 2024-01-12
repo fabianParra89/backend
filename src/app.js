@@ -30,18 +30,18 @@ import realTimeProdcuts from './routers/views/realTimeProducts.router.js';
 
 const app = express()
 
-const SESSION_SECRET = 'ejUrAe7$7fJA^vEpBeZP%HqDK9i$V3ft';
+// const SESSION_SECRET = 'ejUrAe7$7fJA^vEpBeZP%HqDK9i$V3ft';
 
-app.use(sessions({
-    store: MongoStore.create({
-        mongoUrl: URI,
-        mongoOptions: {},
-        ttl: 60*30,
-    }),
-    secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-}));
+// app.use(sessions({
+//     store: MongoStore.create({
+//         mongoUrl: URI,
+//         mongoOptions: {},
+//         ttl: 60*30,
+//     }),
+//     secret: SESSION_SECRET,
+//     resave: true,
+//     saveUninitialized: true,
+// }));
 
 app.use(cookieParse())
 app.use(express.json());
@@ -55,7 +55,7 @@ app.set('view engine', 'handlebars');
 
 initPasport();
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter);
 app.use('/chat', messagesRouter);

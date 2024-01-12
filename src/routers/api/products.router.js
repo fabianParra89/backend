@@ -1,11 +1,12 @@
 import { Router } from 'express';
 
 import ProductManager from '../../dao/Dao/Products.manager.js';
-import { buildResponsePaginated } from '../../utils.js';
+import { buildResponsePaginated, authMiddleware } from '../../utils.js';
+import passport from 'passport';
 
 const router = Router();
 
-router.get('/products', async (req, res) => {
+router.get('/products', authMiddleware('jwt'), async (req, res) => {
     const { query } = req;
     const { limit = 10, page = 1, sort, search } = query;
 

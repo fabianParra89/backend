@@ -9,10 +9,10 @@ import { JWT_SECRET } from '../utils.js';
 const cookieExtractor = (req) => {
     let token = null;
     if (req && req.cookies) {
-      token = req.cookies.token;
+        token = req.cookies.token;
     }
     return token;
-  }
+}
 
 export const init = () => {
     const registerOptions = {
@@ -67,6 +67,7 @@ export const init = () => {
         clientSecret: "d24ecc4e78fc36a6d32ee81cd3522c446e84b6d7",
         callbackURL: 'http://localhost:8080/api/sessions/github/callback',
     };
+    
     passport.use('github', new GithubStrategy(githubOpts, async (accesstoken, refreshToken, profile, done) => {
         const email = profile._json.email;
         let user = await UserModel.findOne({ email });
@@ -78,7 +79,7 @@ export const init = () => {
             first_name: profile._json.name,
             last_name: '',
             email,
-            password:'',
+            password: '',
             age: 18,
         };
 
@@ -97,8 +98,9 @@ export const init = () => {
     const jwtOptions = {
         secretOrKey: JWT_SECRET,
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-      };
-      passport.use('jwt', new JWTStrategy(jwtOptions, (payload, done) => {
+    };
+    
+    passport.use('jwt', new JWTStrategy(jwtOptions, (payload, done) => {
         return done(null, payload);
-      }));
+    }));
 }

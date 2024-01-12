@@ -26,7 +26,10 @@ router.post('/auth/login', async (req, res) => {
     maxcAge: 1000 * 60,
     httpOnly: true,
   })
-    .status(200).json({ status: 'succes' });
+    .status(200)
+    //.json({ status: 'succes' })
+    .redirect('/products');
+
 });
 
 
@@ -42,22 +45,19 @@ router.post('/auth/register', async (req, res) => {
     },
   } = req;
 
-  if (
-    !first_name ||
-    !last_name ||
-    !email ||
-    !password
-  ) {
-    return res.status(400).json({ message: 'Todo los campos son requeridos '});
+  if (!first_name || !last_name || !email || !password) {
+    return res.status(400).render('error', { title: 'Hello People 🖐️', messageError: 'Todos los campos son requeridos.'});
+    //return res.status(400).json({ message: 'Todo los campos son requeridos ' });
   }
 
   let user = await UserModel.findOne({ email });
 
   if (user) {
-    return res.status(400).json({ message: 'Usuario ya registrado'});
+    return res.status(400).render('error', { title: 'Hello People 🖐️', messageError: 'Usuario ya registrado.'});
+    //return res.status(400).json({ message: 'Usuario ya registrado' });
   }
 
-  user = await  UserModel.create({
+  user = await UserModel.create({
     first_name,
     last_name,
     email,
@@ -76,7 +76,7 @@ router.post('/auth/register', async (req, res) => {
 //   if (!token) {
 //     res.status(401).json({ message: 'No tienes permiso para estar aca.' });
 //   }
-  
+
 //   const payload = await verifyToken(token);
 
 //   if (!payload) {
