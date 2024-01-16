@@ -1,8 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 const cartSubSchema = new mongoose.Schema({
-  cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-  grade: Number,
+  cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' }
 }, { _id: false });
 
 const userSchema = new Schema({
