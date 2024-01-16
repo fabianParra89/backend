@@ -1,0 +1,212 @@
+import CartsServices from "../services/cart.service.js";
+import { InvalidDataException, NotFoundException } from "../utils.js";
+import ProductsControllers from "./products.controllers.js";
+
+
+export default class CartManager {
+
+    static async addCart() {
+        const cart = {
+            product: []
+        };
+        // console.log(`Cart is created successfully (${cartCreate._id}) 😁.`);
+        return await CartsServices.create(cart);
+    }
+
+
+    static async addProductCartbyId(cartId, productId, body) {
+
+        const cart = await CartsServices.getById(cartId);
+
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+
+        const products = await ProductsControllers.getById(productId);
+        const { quantity } = body;
+        // console.log(products);
+        if (!products) {
+            throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
+        }
+
+        const productInCarrito = await CartsServices.getProductInCarrito(cartId, productId);
+        if (productInCarrito && productInCarrito.length > 0) {
+            cart.products.forEach(prod => {
+                if (prod.product.toString() === productId) {
+                    prod.quantity += quantity;
+                }
+            });
+            const updateProd = { 'products': cart.products };
+            return await CartsServices.updateByIdSet(cartId, updateProd);
+        } else {
+            const productNew = {
+                product: productId,
+                quantity: quantity
+            }
+            return await CartsServices.updateByIdPush(cartId, productNew);
+        }
+        /*
+        if (cart) {
+            const products = await ProductManager.getById(productId);
+            const { quantity } = body;
+            if (products.statusCode != 200) {
+                return {
+                    status: 'Error',
+                    description: `Product with id: ${productId} not found`,
+                    statusCode: 404
+                };
+            }
+            const productInCarrito = await cartModel.find({ $and: [{ _id: cartId }, { 'products.product': productId }] })
+            if (productInCarrito && productInCarrito.length > 0) {
+                cart.products.forEach(prod => {
+                    if (prod.product.toString() === productId) {
+                        prod.quantity += quantity;
+                    }
+                });
+                const updateProd = { 'products': cart.products };
+                const updateQuantity = await CartModel.updateOne({ _id: cartId }, { $set: updateProd });
+                return {
+                    cart: updateQuantity,
+                    message: "Product is updated successfully",
+                    status: "Success",
+                    statusCode: 200
+                };
+            } else {
+                const productNew = {
+                    product: productId,
+                    quantity: quantity
+                }
+                const updateQuantity = await CartModel.updateOne({ _id: cartId }, { $push: { products: productNew } });
+                return {
+                    cart: updateQuantity,
+                    message: "Product is added successfully",
+                    status: "Success",
+                    statusCode: 200
+                };
+            }
+        } else {
+            return {
+                status: 'Error',
+                description: `Cart with id: ${cartId} not found`,
+                statusCode: 404
+            };
+        }
+        */
+    }
+
+    static async getProductsCartsById(cartId) {
+
+        const cart = await CartsServices.getPopulate(cartId);
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        return cart.products;
+    }
+
+    static async deleteProductCartById(cartId, productId) {
+        const cart = await CartsServices.getById(cartId);
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        const productsInCarrito = cart.products;
+        console.log(productsInCarrito);
+        const newProductsInCarrito = productsInCarrito.filter(prod => prod.product.toString() !== productId);
+        console.log(newProductsInCarrito);
+        const productUpdate = await CartsServices.updateByIdSet(cartId,{ products : newProductsInCarrito } );
+        return {
+            message: `Product with id: ${productId} delete successfully`
+        };
+    }
+
+
+    static async updateProductsCart(cartId, products) {
+        const cart = await CartsServices.getById(cartId);
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        return await CartsServices.updateByIdSet(cartId, { products : products } );
+    }
+
+    static async updateProductQuantity(cartId, productId, body) {
+        const cart = await CartsServices.getById(cartId);
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        const products = await ProductsControllers.getById(productId);
+        const { quantity } = body;
+
+        if (!products) {
+            throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
+        }
+
+        const productInCarrito = await CartsServices.getProductInCarrito(cartId, productId);
+        if (productInCarrito && productInCarrito.length > 0) {
+            cart.products.forEach(prod => {
+                if (prod.product.toString() === productId) {
+                    prod.quantity = quantity;
+                }
+            });
+            const updateProd = { 'products': cart.products };
+            return await CartsServices.updateByIdSet(cartId, updateProd);
+        } else {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        /*
+        if (cart) {
+            const products = await ProductManager.getById(productId);
+            const { quantity } = body;
+            if (products.statusCode != 200) {
+                return {
+                    status: 'Error',
+                    description: `Product with id: ${productId} not found`,
+                    statusCode: 404
+                };
+            }
+            const productInCarrito = await cartModel.find({ $and: [{ _id: cartId }, { 'products.product': productId }] })
+            if (productInCarrito && productInCarrito.length > 0) {
+                cart.products.forEach(prod => {
+                    if (prod.product.toString() === productId) {
+                        prod.quantity = quantity;
+                    }
+                });
+                const updateProd = { 'products': cart.products };
+                const updateQuantity = await CartModel.updateOne({ _id: cartId }, { $set: updateProd });
+                return {
+                    cart: updateQuantity,
+                    message: "Quantity is updated successfully",
+                    status: "Success",
+                    statusCode: 200
+                };
+            } else {
+                return {
+                    message: "Cart not Found",
+                    status: "Error",
+                    statusCode: 404
+                };
+            }
+        } else {
+            return {
+                message: "Product not Found",
+                status: "Error",
+                statusCode: 404
+            };
+        }
+    } catch (error) {
+        console.log(error.message);
+        return {
+            message: "Error add product to cart",
+            status: "Error",
+            statusCode: 400
+        };
+    }*/
+    }
+
+    static async deleteProductsCart(cartId) {
+        const cart = await CartsServices.getById(cartId);
+        if (!cart) {
+            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+        }
+        return await CartsServices.updateByIdSet(cartId, { products : [] }  );
+    }
+
+}

@@ -5,6 +5,7 @@ import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import UserModel from '../dao/models/user.model.js';
 import { createHash, isValidPassword } from '../utils.js'
 import { JWT_SECRET } from '../utils.js';
+import config from './config.js';
 
 const cookieExtractor = (req) => {
     let token = null;
@@ -63,9 +64,9 @@ export const init = () => {
     }));
 
     const githubOpts = {
-        clientID: 'Iv1.3d6e2c5b9a335f7e',
-        clientSecret: "d24ecc4e78fc36a6d32ee81cd3522c446e84b6d7",
-        callbackURL: 'http://localhost:8080/api/sessions/github/callback',
+        clientID: config.clientID,  /*'Iv1.3d6e2c5b9a335f7e'*/
+        clientSecret: config.clientSecret, /*"d24ecc4e78fc36a6d32ee81cd3522c446e84b6d7"*/
+        callbackURL: config.callbackURL, /*'http://localhost:8080/api/sessions/github/callback'*/
     };
     
     passport.use('github', new GithubStrategy(githubOpts, async (accesstoken, refreshToken, profile, done) => {

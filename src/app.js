@@ -9,7 +9,7 @@ import cookieParse from 'cookie-parser';
 
 
 
-import { __dirname } from './utils.js';
+import { Exception, __dirname } from './utils.js';
 import { URI } from "./db/mongodb.js";
 // (__dirname);
 import productsRouter from './routers/api/products.router.js';
@@ -64,11 +64,15 @@ app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRoute
 express.static.mime.types['.css'] = 'text/css';
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
-app.use((error, req, res, next) => {
+/*pp.use((error, req, res, next) => {
     const message = 'ocurrio un error desconocido: ' + error.message;
     console.error(message);
     res.status(500).json({ message });
-})
-
+})*/
+app.use((error, req, res, next) => {
+    const message = error instanceof Exception ? error.message : `Ah ocurrido un error desconocido 😨: ${error.message}`;
+    console.log(message);
+    res.status(error.statusCode || 500).json({ status: 'error', message });
+  });
 
 export default app;
