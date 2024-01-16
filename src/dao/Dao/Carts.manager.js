@@ -3,6 +3,7 @@ import CartModel from '../models/cart.model.js';
 import ProductManager from './Products.manager.js';
 
 export default class CartManager {
+    
     static async addCart() {
         const cart = {
             product: []

@@ -88,8 +88,14 @@ router.post('/auth/register', async (req, res) => {
 
 // };
 
-router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('user'), (req, res) => {
-  res.status(200).send(req.user);
+router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('user'), async(req, res) => {
+  const user = await UserModel.findById(req.user.id);
+  res.status(200).send(user);
 });
 
+/*
+router.get('/sessions/current', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const user = await UserModel.findById(req.user.id);
+  res.status(200).json(user);
+});*/
 export default router;
