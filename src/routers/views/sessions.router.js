@@ -40,12 +40,13 @@ router.get('/sessions/me', (req, res) => {
 });
 
 router.get('/session/logout', (req, res) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return res.render('error', { title: 'Hello People 🖐️', messageError: error.message });
-    }
-    res.redirect('/login');
-  });
+  res.clearCookie('access_token').redirect('/login');
+  // req.session.destroy((error) => {
+  //   if (error) {
+  //     return res.render('error', { title: 'Hello People 🖐️', messageError: error.message });
+  //   }
+  //   res.redirect('/login');
+  // });
 })
 
 router.get('/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
