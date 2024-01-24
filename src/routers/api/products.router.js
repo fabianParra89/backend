@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import ProductsController from "../../controllers/products.controllers.js";
 import ProductManager from '../../dao/Dao/Products.manager.js';
-import { buildResponsePaginated, authMiddleware } from '../../utils.js';
+import { buildResponsePaginated, authMiddleware, authRolesMiddleware } from '../../utils.js';
 import passport from 'passport';
 
 const router = Router();
@@ -50,7 +50,7 @@ router.get('/products', authMiddleware('jwt'), async (req, res) => {
 });
 */
 
-router.get('/products/:pid/',authMiddleware('jwt'), async (req, res, next) => {
+router.get('/products/:pid/', authMiddleware('jwt'), async (req, res, next) => {
     try {
         const { pid } = req.params;
         const prodcut = await ProductsController.getById(pid);
@@ -67,7 +67,7 @@ router.get('/products/:pid/', async (req, res) => {
 });
 */
 
-router.post('/products',authMiddleware('jwt'), async (req, res, next) => {
+router.post('/products', authMiddleware('jwt'), authRolesMiddleware('admin'), async (req, res, next) => {
     try {
         const { body } = req;
         const returnCreate = await ProductsController.create(body);
@@ -86,7 +86,7 @@ router.post('/products', async (req, res) => {
 */
 
 
-router.put('/products/:pid/',authMiddleware('jwt'), async (req, res, next) => {
+router.put('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware('admin'), async (req, res, next) => {
     try {
         const { body } = req;
         const { pid } = req.params;
@@ -105,7 +105,7 @@ router.put('/products/:pid/', async (req, res) => {
     res.status(returnUpdate.statusCode).json(returnUpdate);
 });
 */
-router.delete('/products/:pid/',authMiddleware('jwt'), async (req, res, next) => {
+router.delete('/products/:pid/', authMiddleware('jwt'),authRolesMiddleware('admin'), async (req, res, next) => {
     try {
         const { pid } = req.params;
         const returnDelete = await ProductsController.deleteById(pid);

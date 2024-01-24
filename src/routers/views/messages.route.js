@@ -1,8 +1,10 @@
 import { Router } from "express";
 
+import { authMiddleware, authRolesMiddleware } from "../../utils.js";
+
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/',authMiddleware('jwt'), authRolesMiddleware('user') ,(req, res) => {
     res.render('chat', {title: 'chat coder'});
 })
 

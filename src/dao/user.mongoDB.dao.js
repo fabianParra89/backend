@@ -2,23 +2,23 @@ import UserModel from "./models/user.model.js";
 
 export default class UserDaoMongoDB {
 
-    static getAll(criteria = {}) {
+    getAll(criteria = {}) {
         return UserModel.find(criteria);
     }
 
-    static getByEmail(email){
+    getByEmail(email) {
         return UserModel.findOne({ email });
     }
 
-    static create(data) {
+    create(data) {
         return UserModel.create(data); W
     }
 
-    static updateById(uid, data) {
+    updateById(uid, data) {
         return UserModel.updateOne({ _id: uid }, { $set: data });
     }
 
-    static deleteById(uid) {
+    deleteById(uid) {
         return UserModel.deleteOne({ _id: uid });
     }
 

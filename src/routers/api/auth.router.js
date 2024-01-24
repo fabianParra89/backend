@@ -1,12 +1,14 @@
 import { Router } from 'express';
 
 import UserController from "../../controllers/users.controllers.js";
+import UserDTO from '../../dto/user.dto.js';
 
 import { generateToken, verifyToken, authMiddleware, authRolesMiddleware } from '../../utils.js';
 
+
 const router = Router();
 
-router.get('/auth/users', async (req, res, next) => {
+router.get('/auth/users', authMiddleware('jwt'), async (req, res, next) => {
   try {
     const users = await UserController.getAll({});
     res.status(200).json(users);
@@ -35,8 +37,8 @@ router.post('/auth/login', async (req, res, next) => {
       httpOnly: true,
     })
       .status(200)
-      //.json({ status: 'succes' })
-      .redirect('/products');
+      .json({ status: 'succes' })
+      //.redirect('/products');
   } catch (error) {
     next(error)
   }
@@ -72,9 +74,11 @@ router.post('/auth/register', async (req, res, next) => {
 
 // };
 
-router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res) => {
+router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('admin','user'), async (req, res) => {
   const user = await UserController.getById(req.user.id);
-  res.status(200).send(user);
+  const userDTO = new UserDTO(user);
+  res.status(200).json(userDTO);
+  // res.status(200).send(user);
 });
 
 router.get('/auth/logout', (req, res) => {
