@@ -13,7 +13,7 @@ export default class CartService {
     }
 
     static async getPopulate(cid) {
-        const cart = await cartsRepository.getById(cid).populate('products.product');
+        const cart = await cartsRepository.getPopulate(cid);
         return cart;
     }
 

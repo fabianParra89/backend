@@ -9,7 +9,8 @@ const router = Router();
 
 router.post('/carts/', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res, next) => {
     try {
-        const cart = await CartsControllers.addCart();
+        // console.log('User id',req.user);
+        const cart = await CartsControllers.addCart(req.user.id);
         res.status(201).json(cart);
     } catch (error) {
         next(error);
@@ -81,6 +82,15 @@ router.delete('/carts/:cid/', authMiddleware('jwt') ,authRolesMiddleware('user')
     try {
         const { cid } = req.params;
         const cartID = await CartsControllers.deleteProductsCart(cid);
+        res.status(200).json(cartID);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/carts/:cid/purchaser', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res, next) => {
+    try {
+        const cartID = await CartsControllers.postPurchaser(req);
         res.status(200).json(cartID);
     } catch (error) {
         next(error);

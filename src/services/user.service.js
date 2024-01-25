@@ -28,4 +28,8 @@ export default class UserService {
     static deleteById(id) {
         return usersRepository.deleteById(id);
     }
+
+    static async updateByIdPush(uid, cid) {
+        return await usersRepository.updateByIdPush( uid , cid );
+    }
 }

@@ -1,16 +1,23 @@
 import CartsServices from "../services/cart.service.js";
+import UserServices from "../services/user.service.js";
+import ProductService from "../services/product.service.js";
+
 import { InvalidDataException, NotFoundException } from "../utils.js";
 import ProductsControllers from "./products.controllers.js";
 
 
+
 export default class CartManager {
 
-    static async addCart() {
+    static async addCart(userid) {
         const cart = {
             product: []
         };
         // console.log(`Cart is created successfully (${cartCreate._id}) 😁.`);
-        return await CartsServices.create(cart);
+        const cartCreated = await CartsServices.create(cart);
+        const response = await UserServices.updateByIdPush(userid, cartCreated._id);
+        console.log(response);
+        return cartCreated
     }
 
 
@@ -112,7 +119,7 @@ export default class CartManager {
         console.log(productsInCarrito);
         const newProductsInCarrito = productsInCarrito.filter(prod => prod.product.toString() !== productId);
         console.log(newProductsInCarrito);
-        const productUpdate = await CartsServices.updateByIdSet(cartId,{ products : newProductsInCarrito } );
+        const productUpdate = await CartsServices.updateByIdSet(cartId, { products: newProductsInCarrito });
         return {
             message: `Product with id: ${productId} delete successfully`
         };
@@ -124,7 +131,7 @@ export default class CartManager {
         if (!cart) {
             throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
-        return await CartsServices.updateByIdSet(cartId, { products : products } );
+        return await CartsServices.updateByIdSet(cartId, { products: products });
     }
 
     static async updateProductQuantity(cartId, productId, body) {
@@ -206,7 +213,31 @@ export default class CartManager {
         if (!cart) {
             throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
-        return await CartsServices.updateByIdSet(cartId, { products : [] }  );
+        return await CartsServices.updateByIdSet(cartId, { products: [] });
+    }
+
+    static async postPurchaser(req) {
+        const { cid } = req.params;
+        const email = req.user.email;
+        const cartId = req.user.cartId;
+        const cartFind = cartId.find((e) => e.cartId === cid);
+        if (!cartFind) {
+            throw new NotFoundException(`Carrito con id ${cid} no asigando al usuario`);
+        }
+
+        const cart = await CartsServices.getById(cid);
+        const productsInCart = cart.products;
+        // console.log(productsInCart);
+        productsInCart.map(async (e) => {
+            console.log(e);
+            let product = await ProductService.getById(e.product);
+            if (e.quantity <= product.stock) {
+                console.log('antes', product);
+                product.stock = product.stock - e.quantity;
+                console.log('despues', product);
+            }
+        });
+        
     }
 
 }

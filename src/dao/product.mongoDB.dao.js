@@ -6,7 +6,7 @@ export default class ProductDaoMongoDB {
     }
 
     getById(pid) {
-        console.log('getProduct by id');
+        // console.log('getProduct by id');
         // const producto = ProductModel.findById(pid);
         // console.log("producto", producto);
         return ProductModel.findById(pid);

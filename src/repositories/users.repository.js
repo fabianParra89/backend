@@ -29,5 +29,10 @@ export default class UserRepository{
     async deleteById(id) {
         return this.dao.deleteById(id);
     }
+
+    async updateByIdPush(uid, cid) {
+        console.log(cid);
+        return await this.dao.updateByIdPush({ _id: uid }, { $push: { cartId:{'cartId' : cid}  } });
+    }
 }
 

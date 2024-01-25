@@ -74,7 +74,7 @@ router.post('/auth/register', async (req, res, next) => {
 
 // };
 
-router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('admin','user'), async (req, res) => {
+router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res) => {
   const user = await UserController.getById(req.user.id);
   const userDTO = new UserDTO(user);
   res.status(200).json(userDTO);
