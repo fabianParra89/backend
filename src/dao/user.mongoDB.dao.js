@@ -11,7 +11,7 @@ export default class UserDaoMongoDB {
     }
 
     create(data) {
-        return UserModel.create(data); W
+        return UserModel.create(data); 
     }
 
     updateById(uid, data) {

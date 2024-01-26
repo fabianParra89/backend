@@ -227,17 +227,24 @@ export default class CartManager {
 
         const cart = await CartsServices.getById(cid);
         const productsInCart = cart.products;
-        // console.log(productsInCart);
-        productsInCart.map(async (e) => {
+        let noStokProduct = [];
+
+        for (const e of productsInCart) {
             console.log(e);
             let product = await ProductService.getById(e.product);
+        
             if (e.quantity <= product.stock) {
                 console.log('antes', product);
                 product.stock = product.stock - e.quantity;
-                console.log('despues', product);
+                await ProductService.updateById(e.product, { "stock": product.stock });
+            } else {
+                noStokProduct.push(e);
             }
-        });
-        
+        }
+        if (noStokProduct.length > 0) {
+            const respuesta = await CartsServices.updateByIdSet(cid, { products: noStokProduct });
+        }
+
     }
 
 }
