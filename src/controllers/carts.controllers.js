@@ -1,6 +1,7 @@
 import CartsServices from "../services/cart.service.js";
 import UserServices from "../services/user.service.js";
 import ProductService from "../services/product.service.js";
+import TicketsController from "./tickets.controllers.js";
 
 import { InvalidDataException, NotFoundException } from "../utils.js";
 import ProductsControllers from "./products.controllers.js";
@@ -228,23 +229,45 @@ export default class CartManager {
         const cart = await CartsServices.getById(cid);
         const productsInCart = cart.products;
         let noStokProduct = [];
+        let stokProduct = [];
+        let responseTicket = {};
 
         for (const e of productsInCart) {
             console.log(e);
             let product = await ProductService.getById(e.product);
-        
+
             if (e.quantity <= product.stock) {
-                console.log('antes', product);
                 product.stock = product.stock - e.quantity;
+                let infoProducts = {
+                    id: e.product,
+                    quantity: e.quantity,
+                    price: product.price
+                };
+                stokProduct.push(infoProducts);
                 await ProductService.updateById(e.product, { "stock": product.stock });
             } else {
                 noStokProduct.push(e);
             }
         }
         if (noStokProduct.length > 0) {
-            const respuesta = await CartsServices.updateByIdSet(cid, { products: noStokProduct });
+            await CartsServices.updateByIdSet(cid, { products: noStokProduct });
+            responseTicket.productosSinStock =noStokProduct;
+        } else{
+            await CartsServices.updateByIdSet(cid, { products: [] });
         }
 
+        if (stokProduct.length > 0) {
+            const amount = stokProduct.reduce((total, producto) => total + (producto.price * producto.quantity), 0);
+            const dataTicket = {
+                amount: amount, 
+                purchaser: email,
+                purchaser_datetime: new Date()
+            }
+            const ticket = await TicketsController.create(dataTicket);
+            responseTicket.infoTicket = ticket;
+            
+        }
+        return responseTicket;
     }
 
 }

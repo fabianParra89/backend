@@ -90,8 +90,8 @@ router.delete('/carts/:cid/', authMiddleware('jwt') ,authRolesMiddleware('user')
 
 router.post('/carts/:cid/purchaser', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res, next) => {
     try {
-        const cartID = await CartsControllers.postPurchaser(req);
-        res.status(200).json(cartID);
+        const ticket = await CartsControllers.postPurchaser(req);
+        res.status(200).json(ticket);
     } catch (error) {
         next(error);
     }

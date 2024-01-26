@@ -3,6 +3,7 @@ import config from '../config/config.js';
 export let ProductDao;
 export let CartDao;
 export let UserDao;
+export let TicketDao;
 
 switch (config.persistence) {
   case 'mongoDB':
@@ -12,9 +13,9 @@ switch (config.persistence) {
     const CartDaoMongoDb = (await import('./cart.mongoDB.dao.js')).default;
     CartDao = new CartDaoMongoDb();
     const UserDaoMongoDb = (await import('./user.mongoDB.dao.js')).default;
-    console.log('claseUser', UserDaoMongoDb);
     UserDao = new UserDaoMongoDb();
-    console.log('claseUser', UserDao);
+    const TicketDaoMongoDb = (await import('./ticket.mongoDB.dao.js')).default;
+    TicketDao = new TicketDaoMongoDb();
     break;
   // default:
   //   const ContactDaoMemory = (await import('./contact.memory.dao.js')).default;
