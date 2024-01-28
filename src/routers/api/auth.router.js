@@ -33,7 +33,7 @@ router.post('/auth/login', async (req, res, next) => {
     const user = await UserController.login(req.body);
     const token = generateToken(user);
     res.cookie('token', token, {
-      maxAge: 1000 * 60,
+      maxAge: 30000 * 60,
       httpOnly: true,
     })
       .status(200)

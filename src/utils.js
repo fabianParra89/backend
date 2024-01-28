@@ -51,7 +51,8 @@ export const generateToken = (user) => {
     role: user.role,
     cartId: user.cartId,
   };
-  return JWT.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  return JWT.sign(payload, JWT_SECRET, { expiresIn: '30m' });
+
 };
 
 export const verifyToken = (token) => {

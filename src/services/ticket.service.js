@@ -3,7 +3,7 @@
 import { ticketsRepository } from "../repositories/index.js";
 
 
-export default class UserService {
+export default class TicketService {
     // static getAll(filter = {}) {
     //     return usersRepository.getAll(filter);
     // }

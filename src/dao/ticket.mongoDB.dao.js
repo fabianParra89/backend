@@ -1,6 +1,6 @@
 import ticketModel from "./models/ticket.model.js";
 
-export default class UserDaoMongoDB {
+export default class TicketDaoMongoDB {
 
     // getAll(criteria = {}) {
     //     return UserModel.find(criteria);
