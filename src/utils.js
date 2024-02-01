@@ -5,6 +5,7 @@ import JWT from 'jsonwebtoken';
 import passport from 'passport';
 
 import config from './config/config.js';
+import { faker } from '@faker-js/faker';
 
 const __filename = url.fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -80,10 +81,10 @@ export const authMiddleware = (strategy) => (req, res, next) => {
 };
 
 export const authRolesMiddleware = (role) => (req, res, next) => {
-  if(!req.user) {
+  if (!req.user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  const { role : userRole } = req.user;
+  const { role: userRole } = req.user;
   if (userRole !== role) {
     return res.status(403).json({ message: 'No permissions' });
   }
@@ -120,4 +121,40 @@ export class ForbiddenException extends Exception {
     super(message, 403);
   }
 }
+
+
+
+export const generateProducts = () => {
+  let products = [];
+  let product = {};
+  for (let index = 0; index < 100; index++) {
+
+    product = {
+      id: faker.database.mongodbObjectId(),
+      title: faker.commerce.productName(),
+      description: faker.lorem.paragraph(),
+      price: faker.commerce.price(),
+      thumbnail: faker.image.url(),
+      code: faker.string.alphanumeric({ length: 6 }),
+      stock: faker.number.int({ min: 1, max: 200 }),
+      status: faker.datatype.boolean(),
+      category: faker.commerce.department(),
+    }
+    products.push(product);
+
+  }
+  return products
+  // {
+  //   id: faker.database.mongodbObjectId(),
+  //   title: faker.commerce.productName(),
+  //   description: faker.lorem.paragraph(),
+  //   price: faker.commerce.price(),
+  //   thumbnail: faker.image.url(),
+  //   code: faker.string.alphanumeric({ length: 6 }),
+  //   stock: faker.number.int({ min: 10000, max: 99999 }),
+  //   status: faker.datatype.boolean(),
+  //   category: faker.commerce.department(),
+  // }
+};
+
 

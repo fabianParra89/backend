@@ -16,6 +16,7 @@ import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
 import userRouter from './routers/api/users.router.js';
 import authRouter from './routers/api/auth.router.js';
+import mockingRouter from './routers/api/mocking.router.js'
 
 import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
@@ -57,7 +58,7 @@ initPasport();
 app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter);
+app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter);
 app.use('/chat', messagesRouter);
 app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter);
 
