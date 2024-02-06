@@ -9,7 +9,7 @@ import cookieParse from 'cookie-parser';
 
 
 
-import { Exception, __dirname } from './utils.js';
+import { Exception, __dirname } from './utils/utils.js';
 import { URI } from "./db/mongodb.js";
 // (__dirname);
 import productsRouter from './routers/api/products.router.js';
@@ -17,6 +17,7 @@ import cartsRouter from './routers/api/carts.router.js';
 import userRouter from './routers/api/users.router.js';
 import authRouter from './routers/api/auth.router.js';
 import mockingRouter from './routers/api/mocking.router.js'
+import { errorHandlerMiddleware } from "./middlewares/error-handler.meddleware.js";
 
 import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
@@ -24,6 +25,7 @@ import sessionsRouter from './routers/views/sessions.router.js';
 import products from './routers/views/products.router.js';
 import cartsViewRouter from './routers/views/cart.router.js';
 import { init as initPasport } from "./config/passport.config.js";
+
 
 
 import realTimeProdcuts from './routers/views/realTimeProducts.router.js';
@@ -70,10 +72,12 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
     console.error(message);
     res.status(500).json({ message });
 })*/
-app.use((error, req, res, next) => {
-    const message = error instanceof Exception ? error.message : `Ah ocurrido un error desconocido 😨: ${error.message}`;
-    console.log(message);
-    res.status(error.statusCode || 500).json({ status: 'error', message });
-  });
+
+app.use(errorHandlerMiddleware);
+// app.use((error, req, res, next) => {
+//     const message = error instanceof Exception ? error.message : `Ah ocurrido un error desconocido 😨: ${error.message}`;
+//     console.log(message);
+//     res.status(error.statusCode || 500).json({ status: 'error', message });
+//   });
 
 export default app;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import ProductsController from "../../controllers/products.controllers.js";
 import ProductManager from '../../dao/Dao/Products.manager.js';
-import { buildResponsePaginated, authMiddleware, authRolesMiddleware } from '../../utils.js';
+import { buildResponsePaginated, authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
 import passport from 'passport';
 
 const router = Router();

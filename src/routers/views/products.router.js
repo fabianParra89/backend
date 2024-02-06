@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ProductManager from '../../dao/Dao/Products.manager.js';
-import { buildResponsePaginated } from '../../utils.js';
+import { buildResponsePaginated } from '../../utils/utils.js';
 import UserModel from '../../dao/models/user.model.js';
 import passport from 'passport';
 import config from '../../config/config.js';

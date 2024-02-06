@@ -3,8 +3,10 @@ import UserServices from "../services/user.service.js";
 import ProductService from "../services/product.service.js";
 import TicketsController from "./tickets.controllers.js";
 
-import { InvalidDataException, NotFoundException } from "../utils.js";
 import ProductsControllers from "./products.controllers.js";
+import { CustomError } from "../utils/CustomError.js";
+import { cartIdError, productIdError } from "../utils/CauseMessageError.js";
+import EnumsError from "../utils/EnumsError.js";
 
 
 
@@ -27,14 +29,30 @@ export default class CartManager {
         const cart = await CartsServices.getById(cartId);
 
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
 
         const products = await ProductsControllers.getById(productId);
         const { quantity } = body;
         // console.log(products);
         if (!products) {
-            throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de producto invalido',
+                  cause: productIdError(productId),
+                  message: 'Error al obtener el producto por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
         }
 
         const productInCarrito = await CartsServices.getProductInCarrito(cartId, productId);
@@ -106,7 +124,15 @@ export default class CartManager {
 
         const cart = await CartsServices.getPopulate(cartId);
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         return cart.products;
     }
@@ -114,7 +140,15 @@ export default class CartManager {
     static async deleteProductCartById(cartId, productId) {
         const cart = await CartsServices.getById(cartId);
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         const productsInCarrito = cart.products;
         console.log(productsInCarrito);
@@ -130,7 +164,15 @@ export default class CartManager {
     static async updateProductsCart(cartId, products) {
         const cart = await CartsServices.getById(cartId);
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         return await CartsServices.updateByIdSet(cartId, { products: products });
     }
@@ -138,13 +180,29 @@ export default class CartManager {
     static async updateProductQuantity(cartId, productId, body) {
         const cart = await CartsServices.getById(cartId);
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         const products = await ProductsControllers.getById(productId);
         const { quantity } = body;
 
         if (!products) {
-            throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de producto invalido',
+                  cause: productIdError(productId),
+                  message: 'Error al obtener el producto por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Producto con id ${productId} no encontrado 😱`);
         }
 
         const productInCarrito = await CartsServices.getProductInCarrito(cartId, productId);
@@ -157,7 +215,15 @@ export default class CartManager {
             const updateProd = { 'products': cart.products };
             return await CartsServices.updateByIdSet(cartId, updateProd);
         } else {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         /*
         if (cart) {
@@ -212,7 +278,15 @@ export default class CartManager {
     static async deleteProductsCart(cartId) {
         const cart = await CartsServices.getById(cartId);
         if (!cart) {
-            throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cartId),
+                  message: 'Error al obtener el carrito por su id',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         return await CartsServices.updateByIdSet(cartId, { products: [] });
     }
@@ -223,7 +297,15 @@ export default class CartManager {
         const cartId = req.user.cartId;
         const cartFind = cartId.find((e) => e.cartId === cid);
         if (!cartFind) {
-            throw new NotFoundException(`Carrito con id ${cid} no asigando al usuario`);
+            CustomError.create(
+                {
+                  name: 'id de carrito invalido',
+                  cause: cartIdError(cid),
+                  message: 'El carrito no esta asignado al usuario',
+                  code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+              )
+            // throw new NotFoundException(`Carrito con id ${cid} no asigando al usuario`);
         }
 
         const cart = await CartsServices.getById(cid);

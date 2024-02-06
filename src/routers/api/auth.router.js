@@ -3,7 +3,7 @@ import { Router } from 'express';
 import UserController from "../../controllers/users.controllers.js";
 import UserDTO from '../../dto/user.dto.js';
 
-import { generateToken, verifyToken, authMiddleware, authRolesMiddleware } from '../../utils.js';
+import { generateToken, verifyToken, authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
 
 
 const router = Router();

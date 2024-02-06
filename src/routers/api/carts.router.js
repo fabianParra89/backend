@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 // import CartsManager from '../../dao/Dao/Carts.manager.js';
 import CartsControllers from "../../controllers/carts.controllers.js";
-import { authMiddleware, authRolesMiddleware } from '../../utils.js';
+import { authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
 
 const router = Router();
 

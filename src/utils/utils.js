@@ -3,9 +3,12 @@ import url from 'url';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
 import passport from 'passport';
-
-import config from './config/config.js';
 import { faker } from '@faker-js/faker';
+
+import config from '../config/config.js';
+import { CustomError } from "../utils/CustomError.js";
+import { UnauthorizedError, permissionsError } from "../utils/CauseMessageError.js";
+import EnumsError from "../utils/EnumsError.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
@@ -82,11 +85,27 @@ export const authMiddleware = (strategy) => (req, res, next) => {
 
 export const authRolesMiddleware = (role) => (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    CustomError.create(
+      {
+        name: 'Unauthorized',
+        cause: UnauthorizedError(),
+        message: 'Error con credeciales de ingreso',
+        code: EnumsError.UNAUTHORIZED_ERROR,
+      }
+    )
+    // return res.status(401).json({ message: 'Unauthorized' });
   }
   const { role: userRole } = req.user;
   if (userRole !== role) {
-    return res.status(403).json({ message: 'No permissions' });
+    CustomError.create(
+      {
+        name: 'Permisos denegados',
+        cause: permissionsError(),
+        message: 'Error, usuario sin permisos',
+        code: EnumsError.FORBIDDEN_ERROR,
+      }
+    )
+    // return res.status(403).json({ message: 'No permissions' });
   }
   next();
 };
