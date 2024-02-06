@@ -24,7 +24,7 @@ export default class UserController {
                     name: 'credenciales invalidas',
                     cause: credentialUserError(),
                     message: 'Error de credenciales al intentar ingresar',
-                    code: EnumsError.INVALID_PARAMS_ERROR,
+                    code: EnumsError.UNAUTHORIZED_ERROR,
                 }
             )
             // throw new UnauthorizedException(`Usuario o contraseña invalidos`);
