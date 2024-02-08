@@ -19,8 +19,7 @@ export default class UserDaoMongoDB {
     }
     
     updateByIdPush(filtro, data) {
-        console.log('update product');
-        //return CartModel.updateOne({ _id: cid }, { $set: data });
+        console.debug('update product');
         return UserModel.updateOne(filtro, data);
     }
 

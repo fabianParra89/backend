@@ -26,8 +26,6 @@ export default class CartDaoMongoDB {
 
 
     updateById(filtro, data) {
-        console.log('update product');
-        //return CartModel.updateOne({ _id: cid }, { $set: data });
         return CartModel.updateOne(filtro, data);
     }
 

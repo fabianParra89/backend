@@ -9,5 +9,6 @@ export default{
     clientID: process.env.CLIENT_ID_GITHUB ,
     clientSecret: process.env.CLIENT_SECRET_GITHUB ,
     callbackURL:  process.env.URL_BASE + process.env.PORT + '/api/sessions/github/callback',
-    persistence: process.env.PERSISTENCE || "mongoDB"
+    persistence: process.env.PERSISTENCE || "mongoDB",
+    env: process.env.ENV || "DES"
 };

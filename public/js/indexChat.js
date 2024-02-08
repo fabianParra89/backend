@@ -1,3 +1,4 @@
+import { logger } from "../../src/config/logger.js";
 (function () {
     let user;
     const socket = io();
@@ -46,7 +47,7 @@
 
     })
     .catch((error) => {
-      console.error('Ah ocurrido un error al capturar el nombre 😨:',  error.message);
+      logger.error('Ah ocurrido un error al capturar el nombre 😨:',  error.message);
     });
   
   })();

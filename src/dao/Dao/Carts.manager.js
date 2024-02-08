@@ -1,3 +1,4 @@
+import { logger } from '../../config/logger.js';
 import cartModel from '../models/cart.model.js';
 import CartModel from '../models/cart.model.js';
 import ProductManager from './Products.manager.js';
@@ -9,7 +10,7 @@ export default class CartManager {
             product: []
         };
         const cartCreate = await CartModel.create(cart);
-        console.log(`Cart is created successfully (${cartCreate._id}) 😁.`);
+        logger.info(`Cart is created successfully (${cartCreate._id}) 😁.`);
         return cartCreate;
     }
 
@@ -64,6 +65,7 @@ export default class CartManager {
             }
 
         } catch (error) {
+            logger.error(error.message);
             return {
                 message: error.message,
                 status: "Error",
@@ -91,6 +93,7 @@ export default class CartManager {
                 statusCode: 200
             };
         } catch (error) {
+            logger.error(error.message);
             return {
                 message: error.message,
                 status: "Error",
@@ -119,6 +122,7 @@ export default class CartManager {
                 statusCode: 200
             };
         } catch (error) {
+            logger.error(error.message);
             return {
                 message: error.message,
                 status: "Error",
@@ -148,6 +152,7 @@ export default class CartManager {
 
 
         } catch (error) {
+            logger.error(error.message);
             return {
                 message: error.message,
                 status: "Error",
@@ -199,7 +204,7 @@ export default class CartManager {
                 };
             }
         } catch (error) {
-            console.log(error.message);
+            logger.error(error.message);
             return {
                 message: "Error add product to cart",
                 status: "Error",
@@ -226,6 +231,7 @@ export default class CartManager {
                 statusCode: 200
             };
         } catch (error) {
+            logger.error(error.message);
             return {
                 message: error.message,
                 status: "Error",

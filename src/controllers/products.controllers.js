@@ -2,6 +2,7 @@ import ProductsServices from "../services/product.service.js";
 import { CustomError } from "../utils/CustomError.js";
 import { productIdError, generatorProductCodeError, generatorProductError } from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
+import { logger } from "../config/logger.js";
 
 export default class ProductsController {
   static getAll(criterio, options) {
@@ -25,8 +26,6 @@ export default class ProductsController {
   }
 
   static async create(data) {
-    console.log(data);
-
     const {
       title,
       description,
@@ -47,6 +46,7 @@ export default class ProductsController {
           code: EnumsError.BAD_REQUEST_ERROR,
         }
       )
+      logger.error('Error al intentar crear el producto, codigo de producto ya existe')
       // throw new InvalidDataException(`producto con codigo ${code} ya existe 😱`);
     }
 
@@ -59,6 +59,7 @@ export default class ProductsController {
           code: EnumsError.BAD_REQUEST_ERROR,
         }
       )
+      logger.error('Error,Informacion del producto invalida');
       // throw new InvalidDataException('Todos los campos son requidos 😱');
     }
 
@@ -76,6 +77,7 @@ export default class ProductsController {
           code: EnumsError.INVALID_PARAMS_ERROR,
         }
       )
+      logger.info('Error al obtener el producto por su id');
       // throw new NotFoundException(`producto ${pid} no encontrado 😱`);
     }
     return await ProductsServices.updateById(pid, data);
@@ -92,6 +94,7 @@ export default class ProductsController {
           code: EnumsError.INVALID_PARAMS_ERROR,
         }
       )
+      logger.info('Error al obtener el producto por su id');
       // throw new NotFoundException(`producto ${pid} no encontrado 😱`);
     }
     return await ProductsServices.deleteById(pid);

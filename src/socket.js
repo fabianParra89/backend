@@ -2,6 +2,7 @@ import { Server } from 'socket.io'
 
 import ProductManager from './dao/Dao/productManager.js';
 import MessageManager from './dao/Dao/Messages.manager.js';
+import { logger } from "../src/config/logger.js";
 
 let io;
 let conversation = [];
@@ -21,7 +22,7 @@ export const init = (httpServer) => {
 
   io.on('connection', (socketClient) => {
 
-    console.log(`cliente conectado ${socketClient.id} 🎊`);
+    logger.info(`cliente conectado ${socketClient.id} 🎊`);
 
     socketClient.emit('update-products', products);
 
@@ -32,7 +33,7 @@ export const init = (httpServer) => {
     });
 
     socketClient.on('delete-product', async (productId) => {
-      console.log(productId);
+      logger.info(productId);
       await product1.deleteProduct(productId)
       products = await product1.getProducts()
       io.emit('update-products', products);

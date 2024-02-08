@@ -16,8 +16,10 @@ import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
 import userRouter from './routers/api/users.router.js';
 import authRouter from './routers/api/auth.router.js';
-import mockingRouter from './routers/api/mocking.router.js'
+import mockingRouter from './routers/api/mocking.router.js';
+import loggerRouter from './routers/api/logger.router.js'
 import { errorHandlerMiddleware } from "./middlewares/error-handler.meddleware.js";
+import { addLogger } from "./config/logger.js";
 
 import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
@@ -46,6 +48,7 @@ const app = express()
 //     saveUninitialized: true,
 // }));
 
+app.use(addLogger);
 app.use(cookieParse())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -60,7 +63,7 @@ initPasport();
 app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter);
+app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter, loggerRouter);
 app.use('/chat', messagesRouter);
 app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter);
 
