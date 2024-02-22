@@ -7,6 +7,17 @@ import { authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
 
 const router = Router();
 
+router.get('/carts/' ,  async (req, res, next) => {
+    try {
+        // const { cid } = req.params;
+        const carts = await CartsControllers.getCarts({});
+        res.status(200).json(carts);
+    } catch (error) {
+        next(error)
+    }
+});
+
+
 router.post('/carts/', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res, next) => {
     try {
         // console.log('User id',req.user);

@@ -6,6 +6,7 @@ import sessions from "express-session"
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import cookieParse from 'cookie-parser';
+import cors from "cors";
 
 
 
@@ -18,6 +19,7 @@ import userRouter from './routers/api/users.router.js';
 import authRouter from './routers/api/auth.router.js';
 import mockingRouter from './routers/api/mocking.router.js';
 import loggerRouter from './routers/api/logger.router.js'
+import mailRouter from "./routers/api/mail.router.js";
 import { errorHandlerMiddleware } from "./middlewares/error-handler.meddleware.js";
 import { addLogger } from "./config/logger.js";
 
@@ -48,7 +50,13 @@ const app = express()
 //     saveUninitialized: true,
 // }));
 
+const corsOptions = {
+    origin: 'http://localhost:5500',
+    methods: ['GET','POST','PUT','DELETE'],
+};
+
 app.use(addLogger);
+app.use(cors());
 app.use(cookieParse())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -65,7 +73,7 @@ app.use(passport.initialize());
 
 app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter, loggerRouter);
 app.use('/chat', messagesRouter);
-app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter);
+app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter, mailRouter);
 
 express.static.mime.types['.css'] = 'text/css';
 app.use('/public', express.static(path.join(__dirname, '../public')));

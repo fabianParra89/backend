@@ -5,7 +5,7 @@ export default class CartDaoMongoDB {
 
 
     getAll(criterio = {}, options = {}) {
-        return CartModel.paginate(criterio, options);
+        return CartModel.find(criterio, options);
     }
 
     getById(cid) {

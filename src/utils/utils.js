@@ -1,4 +1,4 @@
-import path from 'path';
+import path, {join} from 'path';
 import url from 'url';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
@@ -10,11 +10,16 @@ import { CustomError } from "../utils/CustomError.js";
 import { UnauthorizedError, permissionsError } from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
 
+// const __filename = url.fileURLToPath(import.meta.url);
+// export const __dirname = path.dirname(__filename);
+
 const __filename = url.fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
+export const baseDir = path.dirname(__filename);
+export const __dirname = join(baseDir, '..');
 
 export const URL_BASE = config.url_base;
 export const JWT_SECRET = config.jwt_secret;
+export const JWT_SECRET_RECOVERY = config.jwt_secret_recovery;
 
 export const buildResponsePaginated = (data, baseUrl = URL_BASE) => {
   const { docs, totalPages, prevPage, nextPage, page, hasPrevPage, hasNextPage, sort, limit, search } = data
@@ -59,9 +64,28 @@ export const generateToken = (user) => {
 
 };
 
+export const generateTokenRecovery = (mail) => {
+  const payload = {
+    mail: mail
+  };
+  return JWT.sign(payload, JWT_SECRET_RECOVERY, { expiresIn: '1m' });
+
+};
+
 export const verifyToken = (token) => {
   return new Promise((resolve) => {
     JWT.verify(token, JWT_SECRET, (error, payload) => {
+      if (error) {
+        return resolve(false);
+      }
+      resolve(payload);
+    });
+  });
+};
+
+export const verifyTokenRecovery = (token) => {
+  return new Promise((resolve) => {
+    JWT.verify(token, JWT_SECRET_RECOVERY, (error, payload) => {
       if (error) {
         return resolve(false);
       }

@@ -79,3 +79,21 @@ export const permissionsError = () => {
 export const UnauthorizedError = () => {
   return `Usuario sin credenciales validas de autenticacion`;
 };
+
+//===================== Send Mails Error =================
+
+export const sendEmailInvalid = () => {
+  return `por favor ingrese un correo valido`;
+};
+
+export const sendEmailNotFound = (email) => {
+  return `el correo ${email} no existe en el sistema`;
+};
+
+export const newPassInvalid = () => {
+  return `La contraseña nueva ya fue utilizada anteriormente`;
+};
+
+export const tokenExpired = () => {
+  return `El token Expiro`;
+};

@@ -1,0 +1,22 @@
+<article>
+  <form id="changePass" action="" method="post">
+    <header>
+      <h1>Recuperar contraseña 😁</h1>
+    </header>
+    <input type="password" name="newPass" placeholder="contraseña" required>
+    <input type="password" name="newPass1" placeholder="confirmar contraseña" required>
+    {{!-- <input type="password" name="password" placeholder="Contraseña" required> --}}
+    <footer>
+      <input type="submit" value="Aceptar ">
+    </footer>
+    
+    <a href="/login">Iniciar Sesión</a>
+  </form>
+</article>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    console.log(token);
+    const changePass = document.getElementById('changePass');
+    changePass.action = `/api/changePass?token=${token}`;
+</script>

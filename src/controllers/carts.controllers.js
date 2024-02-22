@@ -73,6 +73,12 @@ export default class CartManager {
         }
     }
 
+    static async getCarts(filter = {}, opts = {}) {
+        const carts = await CartsServices.getAll(filter, opts);
+        logger.info(`Ordenes encontradas: ${carts.length} 😎`);
+        return carts;
+    }
+
     static async getProductsCartsById(cartId) {
 
         const cart = await CartsServices.getPopulate(cartId);
@@ -106,9 +112,9 @@ export default class CartManager {
             // throw new NotFoundException(`Carrito con id ${cartId} no encontrado 😱`);
         }
         const productsInCarrito = cart.products;
-        logger.info('productos en carrito',productsInCarrito);
+        logger.info('productos en carrito', productsInCarrito);
         const newProductsInCarrito = productsInCarrito.filter(prod => prod.product.toString() !== productId);
-        logger.info('Nuevos productos en carrito',newProductsInCarrito);
+        logger.info('Nuevos productos en carrito', newProductsInCarrito);
         const productUpdate = await CartsServices.updateByIdSet(cartId, { products: newProductsInCarrito });
         return {
             message: `Product with id: ${productId} delete successfully`
