@@ -50,7 +50,8 @@ export default class UserController {
             last_name,
             email,
             password,
-            age
+            age,
+            role
         } = data;
 
         if (!first_name || !last_name || !email || !password) {
@@ -78,7 +79,7 @@ export default class UserController {
                     code: EnumsError.BAD_REQUEST_ERROR,
                 }
             )
-            
+
             // throw new InvalidDataException(`Usuario ya registrado.`);
             //return res.status(400).render('error', { title: 'Hello People 🖐️', messageError: 'Usuario ya registrado.' });
             //return res.status(400).json({ message: 'Usuario ya registrado' });
@@ -90,6 +91,7 @@ export default class UserController {
             email,
             password: createHash(password),
             age,
+            role,
         })
 
         return UsersService.create(newUser);
@@ -111,9 +113,22 @@ export default class UserController {
         return user;
     }
 
-    static async updateById(id, data) {
-        await UserController.getById(id);
-        return UsersService.updateById(id, data);
+    static async updateById(id) {
+        const user = await UsersService.getById(id);
+        if (!user) {
+            CustomError.create(
+                {
+                    name: 'Usuario no existe',
+                    cause: userIdError(id),
+                    message: 'Error al intentar buscar un usuario por id',
+                    code: EnumsError.NOT_FOUND_ERROR,
+                }
+            )
+        }
+
+        (user.role === 'premium') ? user.role = 'user' : user.role = 'premium';
+        await UsersService.updateById(id, user);
+        return await UsersService.getById(id);
     }
 
     static async deleteById(id) {

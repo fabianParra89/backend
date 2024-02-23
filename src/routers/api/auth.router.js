@@ -74,7 +74,7 @@ router.post('/auth/register', async (req, res, next) => {
 
 // };
 
-router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware('user'), async (req, res) => {
+router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware(['user']), async (req, res) => {
   const user = await UserController.getById(req.user.id);
   const userDTO = new UserDTO(user);
   res.status(200).json(userDTO);
@@ -85,5 +85,15 @@ router.get('/auth/logout', (req, res) => {
   res.clearCookie('access_token').redirect('/login');
   
 })
+
+router.put('/users/premium/:uid', authMiddleware('jwt'), authRolesMiddleware(['admin']),  async (req, res, next) => {
+  try {
+    const { params: { uid } } = req;
+    const user = await UserController.updateById(uid);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

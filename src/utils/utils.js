@@ -120,7 +120,8 @@ export const authRolesMiddleware = (role) => (req, res, next) => {
     // return res.status(401).json({ message: 'Unauthorized' });
   }
   const { role: userRole } = req.user;
-  if (userRole !== role) {
+  // if (userRole !== role) {
+  if (  !role.includes(userRole)) {
     CustomError.create(
       {
         name: 'Permisos denegados',

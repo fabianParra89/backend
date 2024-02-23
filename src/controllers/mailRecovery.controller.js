@@ -122,7 +122,7 @@ export default class MailManager {
           name: 'Expiro token',
           cause: tokenExpired(),
           message: 'El token expiro',
-          code: EnumsError.INVALID_PARAMS_ERROR,
+          code: EnumsError.TOKEN_EXPIRED,
         }
       )
       logger.error('El token expiro')

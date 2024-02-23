@@ -7,4 +7,5 @@ export default {
   UNAUTHORIZED_ERROR: 6,
   FORBIDDEN_ERROR: 7,
   NOT_FOUND_ERROR:8,
+  TOKEN_EXPIRED: 9,
 }

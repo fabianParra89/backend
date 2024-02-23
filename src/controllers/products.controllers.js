@@ -1,6 +1,6 @@
 import ProductsServices from "../services/product.service.js";
 import { CustomError } from "../utils/CustomError.js";
-import { productIdError, generatorProductCodeError, generatorProductError } from "../utils/CauseMessageError.js";
+import { productIdError, generatorProductCodeError, generatorProductError, permissionsError } from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
 import { logger } from "../config/logger.js";
 
@@ -25,7 +25,7 @@ export default class ProductsController {
     return prodcut;
   }
 
-  static async create(data) {
+  static async create(data, user) {
     const {
       title,
       description,
@@ -63,6 +63,7 @@ export default class ProductsController {
       // throw new InvalidDataException('Todos los campos son requidos 😱');
     }
 
+    (user.role === "premium") ? data.owner = user.id : data.owner = "admin";
     return await ProductsServices.create(data);
   }
 
@@ -78,13 +79,24 @@ export default class ProductsController {
         }
       )
       logger.info('Error al obtener el producto por su id');
-      // throw new NotFoundException(`producto ${pid} no encontrado 😱`);
     }
     return await ProductsServices.updateById(pid, data);
   }
 
-  static async deleteById(pid) {
+  static async deleteById(pid, user) {
     const prodcut = await ProductsServices.getById(pid);
+    if(!(prodcut.owner === 'admin' || prodcut.owner === user.id || user.role === 'admin' )){ 
+      CustomError.create(
+        {
+          name: 'Permisos denegados',
+          cause: permissionsError(),
+          message: 'Error, usuario sin permisos',
+          code: EnumsError.FORBIDDEN_ERROR,
+        }
+      )
+      logger.info('Error, usuario sin permisos');
+    }
+
     if (!prodcut) {
       CustomError.create(
         {
@@ -95,7 +107,7 @@ export default class ProductsController {
         }
       )
       logger.info('Error al obtener el producto por su id');
-      // throw new NotFoundException(`producto ${pid} no encontrado 😱`);
+
     }
     return await ProductsServices.deleteById(pid);
   }

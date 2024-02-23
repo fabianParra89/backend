@@ -5,7 +5,7 @@ import TicketsController from "./tickets.controllers.js";
 
 import ProductsControllers from "./products.controllers.js";
 import { CustomError } from "../utils/CustomError.js";
-import { cartIdError, productIdError } from "../utils/CauseMessageError.js";
+import { cartIdError, productIdError, permissionsError} from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
 import { logger } from "../config/logger.js";
 
@@ -25,7 +25,7 @@ export default class CartManager {
     }
 
 
-    static async addProductCartbyId(cartId, productId, body) {
+    static async addProductCartbyId(cartId, productId, body, user) {
 
         const cart = await CartsServices.getById(cartId);
 
@@ -42,6 +42,18 @@ export default class CartManager {
         }
 
         const products = await ProductsControllers.getById(productId);
+
+        if (products.owner === user.id) {
+            CustomError.create(
+                {
+                    name: 'Permisos denegados',
+                    cause: permissionsError(),
+                    message: 'Usuario no puede agregar un producto propio',
+                    code: EnumsError.FORBIDDEN_ERROR,
+                }
+            )
+            logger.info('Usuario no puede agregar un producto propio');
+        }
         const { quantity } = body;
         if (!products) {
             CustomError.create(

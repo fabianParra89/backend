@@ -67,10 +67,10 @@ router.get('/products/:pid/', async (req, res) => {
 });
 */
 
-router.post('/products', authMiddleware('jwt'), authRolesMiddleware('admin'), async (req, res, next) => {
+router.post('/products', authMiddleware('jwt'), authRolesMiddleware(['admin', 'premium']), async (req, res, next) => {
     try {
-        const { body } = req;
-        const returnCreate = await ProductsController.create(body);
+        const { body, user } = req;
+        const returnCreate = await ProductsController.create(body, user);
         res.status(201).json(returnCreate);
     } catch (error) {
         next(error);
@@ -86,7 +86,7 @@ router.post('/products', async (req, res) => {
 */
 
 
-router.put('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware('admin'), async (req, res, next) => {
+router.put('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware(['admin']), async (req, res, next) => {
     try {
         const { body } = req;
         const { pid } = req.params;
@@ -105,10 +105,11 @@ router.put('/products/:pid/', async (req, res) => {
     res.status(returnUpdate.statusCode).json(returnUpdate);
 });
 */
-router.delete('/products/:pid/', authMiddleware('jwt'),authRolesMiddleware('admin'), async (req, res, next) => {
+router.delete('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware(['admin', 'premium']), async (req, res, next) => {
     try {
         const { pid } = req.params;
-        const returnDelete = await ProductsController.deleteById(pid);
+        const { user } = req;
+        const returnDelete = await ProductsController.deleteById(pid, user);
         res.status(200).json(returnDelete);
 
     } catch (error) {

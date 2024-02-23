@@ -31,6 +31,9 @@ router.post('/changePass', async (req, res, next) => {
         res.status(200)
         .render('error', { title: 'error 🖐️', messageError: 'Contarseña cambiada exitosamente' });
     } catch (error) {
+        if (error.code === 9) {
+            res.redirect('/recovery-password');
+        }
         res.render('error', { title: 'error 🖐️', messageError: error.message });
     }    
 });
