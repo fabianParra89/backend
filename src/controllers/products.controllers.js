@@ -80,7 +80,9 @@ export default class ProductsController {
       )
       logger.info('Error al obtener el producto por su id');
     }
-    return await ProductsServices.updateById(pid, data);
+    await ProductsServices.updateById(pid, data);
+    return await ProductsServices.getById(pid)
+    
   }
 
   static async deleteById(pid, user) {
