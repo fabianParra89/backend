@@ -2,16 +2,18 @@ import express from 'express';
 import handlebars from "express-handlebars";
 // import { promises as fs } from 'fs';
 import path from "path";
-import sessions from "express-session"
-import MongoStore from 'connect-mongo';
+// import sessions from "express-session"
+// import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import cookieParse from 'cookie-parser';
 import cors from "cors";
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 
 
-import { Exception, __dirname } from './utils/utils.js';
-import { URI } from "./db/mongodb.js";
+import { __dirname } from './utils/utils.js';
+
 // (__dirname);
 import productsRouter from './routers/api/products.router.js';
 import cartsRouter from './routers/api/carts.router.js';
@@ -37,19 +39,6 @@ import realTimeProdcuts from './routers/views/realTimeProducts.router.js';
 
 const app = express()
 
-// const SESSION_SECRET = 'ejUrAe7$7fJA^vEpBeZP%HqDK9i$V3ft';
-
-// app.use(sessions({
-//     store: MongoStore.create({
-//         mongoUrl: URI,
-//         mongoOptions: {},
-//         ttl: 60*30,
-//     }),
-//     secret: SESSION_SECRET,
-//     resave: true,
-//     saveUninitialized: true,
-// }));
-
 const corsOptions = {
     origin: 'http://localhost:5500',
     methods: ['GET','POST','PUT','DELETE'],
@@ -69,7 +58,21 @@ app.set('view engine', 'handlebars');
 
 initPasport();
 app.use(passport.initialize());
-// app.use(passport.session());
+
+if (process.env.ENV !== 'PRD') {
+    const swaggerOpts = {
+      definition: {
+        openapi: '3.0.0',
+        info: {
+          title: 'Ecommerce API',
+          description: 'Esta es la documentación de la API de Ecommerce. Una aplicación para Gestion de tu pedido.',
+        },
+      },
+      apis: [path.join(__dirname, '.', 'docs', '**', '*.yaml')],
+    };
+    const specs = swaggerJsDoc(swaggerOpts);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  }
 
 app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter, loggerRouter);
 app.use('/chat', messagesRouter);
@@ -78,17 +81,7 @@ app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRoute
 express.static.mime.types['.css'] = 'text/css';
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
-/*pp.use((error, req, res, next) => {
-    const message = 'ocurrio un error desconocido: ' + error.message;
-    console.error(message);
-    res.status(500).json({ message });
-})*/
-
 app.use(errorHandlerMiddleware);
-// app.use((error, req, res, next) => {
-//     const message = error instanceof Exception ? error.message : `Ah ocurrido un error desconocido 😨: ${error.message}`;
-//     console.log(message);
-//     res.status(error.statusCode || 500).json({ status: 'error', message });
-//   });
+
 
 export default app;

@@ -1,0 +1,246 @@
+paths:
+  /api/products:
+    get:
+      summary: Listar Productos
+      tags:
+        - Products
+      responses:
+        200:
+          description: los Productos fueron obtenidos con exitosamente desde la base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description:
+                    example: succes
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Products'
+        500:
+          description: Error interno del servidor.
+    post:
+      summary: Crear un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createProducts'
+      responses:
+        201:
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+                      
+        500:
+          description: Error interno del servidor.
+  
+  /api/products/{pid}:
+    get:
+      summary: Obtener producto por su identificador.
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: Identificador del producto a buscar.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto obtenido correctamente desde la base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Estado de la respuesta
+                    example: success
+                  payload:
+                    $ref: '#/components/schemas/Products'
+        404:
+          description: Producto no encontrado.
+        500:
+          description: Error interno del servidor.
+    put:
+      summary: Modificar un producto
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: Identificador del producto a modificar.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/updateProducts'
+      responses:
+        202:
+          description: Producto modificado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+                      
+        500:
+          description: Error interno del servidor.
+    delete:
+      summary: Eliminar un producto por identificador
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: Identificador del producto a modificar.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto modificado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteProducts'              
+        500:
+          description: Error interno del servidor.  
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: identificador unico del producto
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripcion del producto
+        price:
+          type: string
+          description: Precio del producto
+        thumbnail:
+          type: string
+          description: Imagen del producto
+        code:
+          type: string
+          description: Codigo unico del producto
+        stock:
+          type: string
+          description: Cantidad disponible del producto
+        status:
+          type: string
+          description: Estado del prodcuto
+        category:
+          type: string
+          description: Categoria para clasificar el producto
+        owner:
+          type: string
+          description: Usuario propietario del producto
+      example:
+        _id: 65c1b24ee703711100b2ea87
+        title: test4
+        description: bebida
+        price: 9000
+        code: ent010
+        stock: 21
+        status: true
+        category: entrada
+        createdAt: 2024-02-06T04:15:10.589Z
+        updatedAt: 2024-02-06T04:15:10.589Z
+    deleteProducts:
+      type: object
+      properties:
+        acknowledged:
+          type: string
+          description: Respuesta delete de la base de datos
+        deletedCount:
+          type: string
+          description: Elementos borrados de la base de datos
+      example:
+        acknowledged: true
+        deletedCount: 1 
+  requestBodies:
+    createProducts:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del Producto
+        description:
+          type: string
+          description: Descripcion del producto
+        price:
+          type: string
+          description: Precio del producto
+        code:
+          type: string
+          description: Codigo unico del producto
+        status:
+          type: string
+          description: Estado del prodcuto
+        stock:
+          type: string
+          description: Categoria para clasificar el producto
+        category:
+          type: string
+          description: Categoria para clasificar el producto
+      example:
+        title: test4
+        description: bebida
+        price: 9000
+        code: ent010
+        stock: 21
+        status: true
+        category: entrada
+    updateProducts:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del Producto
+        description:
+          type: string
+          description: Descripcion del producto
+        price:
+          type: string
+          description: Precio del producto
+        code:
+          type: string
+          description: Codigo unico del producto
+        status:
+          type: string
+          description: Estado del prodcuto
+        stock:
+          type: string
+          description: Categoria para clasificar el producto
+        category:
+          type: string
+          description: Categoria para clasificar el producto
+      example:
+        title: test4
+        description: bebida
+        code: ent010
+        stock: 21
+        
+  
+
