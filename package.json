@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test:integrations": "mocha --timeout 10000 ./Tests/integrations/*.test.js"
   },
   "keywords": [
     "express",
@@ -38,5 +39,10 @@
     "uuid": "^9.0.1",
     "uuidv4": "^6.2.13",
     "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "mocha": "^10.3.0",
+    "supertest": "^6.3.4"
   }
 }
