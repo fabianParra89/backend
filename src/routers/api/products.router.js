@@ -86,7 +86,7 @@ router.post('/products', async (req, res) => {
 */
 
 
-router.put('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware(['admin']), async (req, res, next) => {
+router.put('/products/:pid/', authMiddleware('jwt'), authRolesMiddleware(['admin', 'premium']), async (req, res, next) => {
     try {
         const { body } = req;
         const { pid } = req.params;

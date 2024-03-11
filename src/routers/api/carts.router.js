@@ -4,6 +4,7 @@ import { Router } from 'express';
 // import CartsManager from '../../dao/Dao/Carts.manager.js';
 import CartsControllers from "../../controllers/carts.controllers.js";
 import { authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
+import { logger } from '../../config/logger.js';
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.get('/carts/:cid/' , authMiddleware('jwt') , async (req, res, next) => {
     }
 });
 
-router.delete('/carts/:cid/product/:pid/' , authMiddleware('jwt'),authRolesMiddleware(['user']), async (req, res, next) => {
+router.delete('/carts/:cid/product/:pid/' , authMiddleware('jwt'),authRolesMiddleware(['user', 'premium']), async (req, res, next) => {
     try {
         const { cid } = req.params;
         const { pid } = req.params;
@@ -89,7 +90,7 @@ router.put('/carts/:cid/product/:pid/', authMiddleware('jwt') ,authRolesMiddlewa
 
 });
 
-router.delete('/carts/:cid/', authMiddleware('jwt') ,authRolesMiddleware(['user']), async (req, res, next) => {
+router.delete('/carts/:cid/', authMiddleware('jwt') ,authRolesMiddleware(['user', 'premium']), async (req, res, next) => {
     try {
         const { cid } = req.params;
         const cartID = await CartsControllers.deleteProductsCart(cid);
