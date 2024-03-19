@@ -41,6 +41,8 @@ export default class UserController {
             )
             // throw new UnauthorizedException(`Usuario o contraseña invalidos`);
         }
+        user.last_connection = Date.now();
+        await UsersService.updateById(user._id, user);
         return user
     }
 
@@ -130,6 +132,24 @@ export default class UserController {
         await UsersService.updateById(id, user);
         return await UsersService.getById(id);
     }
+
+    static async logOut(id) {
+        const user = await UsersService.getById(id);
+        if (!user) {
+            CustomError.create(
+                {
+                    name: 'Usuario no existe',
+                    cause: userIdError(id),
+                    message: 'Error al intentar buscar un usuario por id',
+                    code: EnumsError.NOT_FOUND_ERROR,
+                }
+            )
+        }
+        user.last_connection = Date.now();
+        await UsersService.updateById(id, user);
+        return await UsersService.getById(id);
+    }
+
 
     static async deleteById(id) {
         await UserController.getById(id);

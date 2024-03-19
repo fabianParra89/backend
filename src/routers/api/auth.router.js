@@ -63,8 +63,9 @@ router.get('/auth/current', authMiddleware('jwt'), authRolesMiddleware(['user', 
   // res.status(200).send(user);
 });
 
-router.get('/auth/logout', (req, res) => {
-  res.clearCookie('access_token').redirect('/login');
+router.get('/auth/logout', authMiddleware('jwt'), async (req, res) => {
+  await UserController.logOut(req.user.id);
+  res.clearCookie('token').redirect('/login');
   
 })
 
