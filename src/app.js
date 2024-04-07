@@ -29,6 +29,7 @@ import indexRouter from './routers/views/index.router.js';
 import messagesRouter from './routers/views/messages.route.js';
 import sessionsRouter from './routers/views/sessions.router.js';
 import products from './routers/views/products.router.js';
+import users from './routers/views/users.router.js';
 import cartsViewRouter from './routers/views/cart.router.js';
 import { init as initPasport } from "./config/passport.config.js";
 
@@ -74,7 +75,7 @@ if (process.env.ENV !== 'PRD') {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
-app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter, loggerRouter);
+app.use('/', indexRouter, realTimeProdcuts, products, cartsViewRouter, mockingRouter, loggerRouter, users);
 app.use('/chat', messagesRouter);
 app.use('/api',authRouter, productsRouter, cartsRouter, sessionsRouter,userRouter, mailRouter);
 

@@ -1,16 +1,22 @@
 <h1>Lista de productos</h1>
 <article>
-  <header>
-    <h1>Te damos la bienvenida 😁</h1>
-  </header>
-  <p><strong>Nombre:</strong> {{user.first_name}}</p>
-  <p><strong>Apellido:</strong> {{user.last_name}}</p>
-  <p><strong>Correo:</strong> {{user.email}}</p>
-  <p><strong>Edad:</strong> {{user.age}}</p>
-  <p><strong>Rol:</strong> {{user.role}}</p>
-  <footer>
-    <a href="/api/auth/logout" role="button">Salir</a>
-  </footer>
+    <header>
+        <h1>Te damos la bienvenida 😁</h1>
+        {{#if cart.renderViewCart }}
+            <a href="/carts/{{cart.cid}}" role="button">{{cart.sumaProductsCart}}</a>
+        {{/if }}
+    </header>
+    <p><strong>Nombre:</strong> {{user.first_name}}</p>
+    <p><strong>Apellido:</strong> {{user.last_name}}</p>
+    <p><strong>Correo:</strong> {{user.email}}</p>
+    <p><strong>Edad:</strong> {{user.age}}</p>
+    <p><strong>Rol:</strong> {{user.role}}</p>
+    <footer>
+        <a href="/api/auth/logout" role="button">Salir</a>
+        {{#if admin }}
+            <a href="/users" role="button">Usuarios</a>
+        {{/if }}
+    </footer>
 </article>
 
 <article>
@@ -29,7 +35,7 @@
                 <li class="list-group-item">{{this.stock}}</li>
             </ul>
             <div class="card-body">
-                <a href="#" class="btn btn-primary">agregar al carrito</a>
+                <a href="/carts/product/{{this._id}}" class="btn btn-primary">agregar al carrito</a>
             </div>
         </div>
         {{/each}}

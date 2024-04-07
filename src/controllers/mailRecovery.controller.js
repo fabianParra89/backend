@@ -115,6 +115,92 @@ export default class MailManager {
     return result
   }
 
+  static async emailUserInactivity(email) {
+
+    const user = await UsersService.getByEmail(email);
+    if (!user) {
+      CustomError.create(
+        {
+          name: 'usuario no existe',
+          cause: sendEmailNotFound(),
+          message: 'No existe el email en el sistema',
+          code: EnumsError.INVALID_PARAMS_ERROR,
+        }
+      )
+      logger.error(`No existe la cuenta ${email}  en el sistema`);
+      //return res.status(401).json({ message: 'Correo o contraseña invalidos.' });
+      // return res.render('error', { title: 'Hello People 🖐️', messageError: 'Correo o contraseña invalidos.' });
+    }
+
+    const token = generateTokenRecovery(email);
+    const linkRecovery = `${config.url_base_recovery}/page-recoveryPass?token=${token}`;
+    const emailService = EmailService.getInstance();
+    const result = await emailService.sendEmail(
+      email,
+      'Hola, desde nuestro servidor en Node js v2',
+      `<!DOCTYPE html>
+            <html lang="es">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Recuperación de Contraseña</title>
+            </head>
+            <body>
+            
+              
+              <div>
+              <h2>SEñor usuario, su cuenta ha sido eliminado por inactividad</h2>
+              </div>
+              
+            
+            </body>
+            </html>
+            `,
+    );
+    return result
+  }
+
+  static async emailProductDelete(email, product) {
+
+    const user = await UsersService.getByEmail(email);
+    if (!user) {
+      CustomError.create(
+        {
+          name: 'usuario no existe',
+          cause: sendEmailNotFound(),
+          message: 'No existe el email en el sistema',
+          code: EnumsError.INVALID_PARAMS_ERROR,
+        }
+      )
+      logger.error(`No existe la cuenta ${email}  en el sistema`);
+      //return res.status(401).json({ message: 'Correo o contraseña invalidos.' });
+      // return res.render('error', { title: 'Hello People 🖐️', messageError: 'Correo o contraseña invalidos.' });
+    }
+
+    const token = generateTokenRecovery(email);
+    const linkRecovery = `${config.url_base_recovery}/page-recoveryPass?token=${token}`;
+    const emailService = EmailService.getInstance();
+    const result = await emailService.sendEmail(
+      email,
+      `Producto eliminado del Ecommerce`,
+      `<!DOCTYPE html>
+            <html lang="es">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Eliminación de producto</title>
+            </head>
+            <body>
+              <div>
+              <h2>Señor usuario, el producto ${product.title} con codigo ${product.code} ha sido eliminado correctamente</h2>
+              </div>
+            </body>
+            </html>
+            `,
+    );
+    return result
+  }
+
   static async changePass(payload, body) {
     if (!payload) {
       CustomError.create(

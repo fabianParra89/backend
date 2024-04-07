@@ -1,0 +1,43 @@
+<h1>Lista de productos</h1>
+<article>
+    <header>
+        <h1>Te damos la bienvenida 😁</h1>
+    </header>
+    <p><strong>Nombre:</strong> {{user.first_name}}</p>
+    <p><strong>Apellido:</strong> {{user.last_name}}</p>
+    <p><strong>Correo:</strong> {{user.email}}</p>
+    <p><strong>Edad:</strong> {{user.age}}</p>
+    <p><strong>Rol:</strong> {{user.role}}</p>
+    <footer>
+        <a href="/api/auth/logout" role="button">Salir</a>
+    </footer>
+</article>
+
+<article>
+    <div>
+        <table >
+            <thead>
+                <tr >
+                    <th scope="col">Nombre Completo</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Cambiar Rol</th>
+                    <th scope="col">Eliminar</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+
+                <tr>
+                    <th scope="row">{{this.fullname}}</th>
+                    <td>{{this.email}}</td>
+                    <td>{{this.role}}</td>
+                    <td><a href="/changeRol/{{this.id}}" role="button">Cambiar</a></td>
+                    <td><a href="/deleteUser/{{this.id}}" role="button">Eliminar</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</article>

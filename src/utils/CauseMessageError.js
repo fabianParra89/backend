@@ -70,6 +70,10 @@ export const userIdError = (id) => {
   `;
 };
 
+export const userAdmin = (id) => {
+  return `el usuario con id ${id} no se puede cambiar de Rol`;
+};
+
 //===================== Roles Error =================
 
 export const permissionsError = () => {

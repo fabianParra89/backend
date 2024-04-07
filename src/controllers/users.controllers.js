@@ -4,6 +4,7 @@ import { createHash, isValidPassword } from '../utils/utils.js';
 import { CustomError } from "../utils/CustomError.js";
 import { credentialUserError, generatorUserError, generatorUserEmailError, userIdError } from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
+import MailController from '../controllers/mailRecovery.controller.js';
 
 export default class UserController {
     static getAll(filter = {}) {
@@ -128,6 +129,17 @@ export default class UserController {
             )
         }
 
+        if (user.role === 'admin') {
+            CustomError.create(
+                {
+                    name: 'Usuario Admin',
+                    cause: userAdmin(id),
+                    message: 'El usuario tiene rol admin no es posible cambiarlo',
+                    code: EnumsError.INVALID_PARAMS_ERROR,
+                }
+            )
+        }
+
         (user.role === 'premium') ? user.role = 'user' : user.role = 'premium';
         await UsersService.updateById(id, user);
         return await UsersService.getById(id);
@@ -154,5 +166,18 @@ export default class UserController {
     static async deleteById(id) {
         await UserController.getById(id);
         return UsersService.deleteById(id);
+    }
+
+    static async deleteByInactivity() {
+        const limitInactivity = new Date();
+        limitInactivity.setDate(limitInactivity.getDate() - 2);
+        const userInactivity = await UsersService.getByLastConnection(limitInactivity);
+        // console.log('userInactivity', userInactivity);
+        userInactivity.map(user => {
+            console.log('id=', user._id);
+            UsersService.deleteById(user.id);
+            MailController.emailUserInactivity(user.email);
+        })
+        return userInactivity
     }
 }

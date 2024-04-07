@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import UserController from "../../controllers/users.controllers.js";
 import UserDTO from '../../dto/user.dto.js';
+import UsersDTO from '../../dto/users.dto.js';
 
 import { generateToken, verifyToken, authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
 
@@ -37,8 +38,8 @@ router.post('/auth/login', async (req, res, next) => {
       httpOnly: true,
     })
       .status(200)
-      .json({ status: 'succes' })
-      //.redirect('/products');
+      // .json({ status: 'succes' })
+      .redirect('/products');
   } catch (error) {
     next(error)
   }
@@ -77,6 +78,26 @@ router.put('/users/premium/:uid', authMiddleware('jwt'), authRolesMiddleware(['a
   } catch (error) {
     next(error);
   }
+});
+
+router.get('/users', authMiddleware('jwt'), async (req, res, next) => {
+  try {
+    const users = await UserController.getAll({});
+    const usersDTO = new UsersDTO(users);
+    res.status(200).json(usersDTO);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/users' , authMiddleware('jwt'), async (req, res, next) => {
+  try {
+      const usersDelete = await UserController.deleteByInactivity();
+      res.status(200).json(usersDelete);
+  } catch (error) {
+      next(error);
+  }
+
 });
 
 export default router;

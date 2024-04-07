@@ -27,4 +27,8 @@ export default class UserDaoMongoDB {
         return UserModel.deleteOne({ _id: uid });
     }
 
+    getByLastConnection(date){
+        return UserModel.find({ last_connection: { $lt: date } })
+    }
+
 }

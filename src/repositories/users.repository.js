@@ -34,5 +34,10 @@ export default class UserRepository{
         console.log(cid);
         return await this.dao.updateByIdPush({ _id: uid }, { $push: { cartId:{'cartId' : cid}  } });
     }
+    async getByLastConnection(date) {
+        console.log(date);
+        return await this.dao.getByLastConnection(date);
+    }
+    
 }
 

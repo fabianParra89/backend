@@ -32,4 +32,8 @@ export default class UserService {
     static async updateByIdPush(uid, cid) {
         return await usersRepository.updateByIdPush( uid , cid );
     }
+
+    static async getByLastConnection(date) {
+        return await usersRepository.getByLastConnection( date );
+    }
 }
