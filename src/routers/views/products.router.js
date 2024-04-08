@@ -70,6 +70,7 @@ router.get('/products', passport.authenticate('jwt', { session: false }), async 
   const baseUrl = `${config.url_basePaginate}`;
   console.log('baseURL', baseUrl);
   const data = buildResponsePaginated({ ...result, sort, search }, baseUrl);
+  console.log('Data', data);
   res.render('products', { title: 'Coder House Admin', ...data, user: user, admin: admin, cart: viewCart });
 });
 
