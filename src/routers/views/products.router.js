@@ -68,6 +68,7 @@ router.get('/products', passport.authenticate('jwt', { session: false }), async 
   const admin  = (role === 'admin') ? true: false;
   const result = await ProductManager.get(criterio, options);
   const baseUrl = `${config.url_basePaginate}`;
+  console.log('baseURL', baseUrl);
   const data = buildResponsePaginated({ ...result, sort, search }, baseUrl);
   res.render('products', { title: 'Coder House Admin', ...data, user: user, admin: admin, cart: viewCart });
 });
