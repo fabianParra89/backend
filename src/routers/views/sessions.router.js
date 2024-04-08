@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import UserModel from '../../dao/models/user.model.js';
 import { createHash, isValidPassword } from '../../utils/utils.js'
+import { authMiddleware, authRolesMiddleware } from '../../utils/utils.js';
+import UserController from "../../controllers/users.controllers.js";
 import passport from 'passport';
 
 const router = Router();
@@ -10,10 +12,23 @@ router.post('/sessions/login', passport.authenticate('login', { failureRedirect:
   res.redirect('/products');
 });
 
-router.post('/sessions/register', passport.authenticate('register', { failureRedirect: '/register' }), async (req, res) => {
-  // req.session.user = req.user;
 
-  res.redirect('/login');
+router.post('/sessions/register', async (req, res) => {
+  try {
+    const user = await UserController.create(req.body);
+    res.redirect('/login');
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/auth/register', async (req, res, next) => {
+  try {
+    const user = await UserController.create(req.body);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/sessions/recovery-password', async (req, res) => {

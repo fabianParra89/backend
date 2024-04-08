@@ -46,7 +46,7 @@ router.get('/changeRol/:uid', authMiddleware('jwt'), authRolesMiddleware(['admin
   try {
 
     const { params: { uid } } = req;
-    const user = await UserController.updateById(uid);
+    const user = await UserController.updateRoleById(uid);
     res.redirect('/users');
     // res.render('users', { title: 'Usuarios Ecommerce', ...usersDTO, user: user });
     // res.status(200).json(usersDTO);

@@ -102,6 +102,7 @@ router.delete('/carts/:cid/', authMiddleware('jwt') ,authRolesMiddleware(['user'
 
 router.post('/carts/:cid/purchaser', authMiddleware('jwt'), authRolesMiddleware(['user', 'premium']), async (req, res, next) => {
     try {
+        console.log('++++++++++++',req.params.cid);
         const ticket = await CartsControllers.postPurchaser(req);
         res.status(200).json(ticket);
     } catch (error) {

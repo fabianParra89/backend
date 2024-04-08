@@ -4,6 +4,7 @@ import ProductService from "../services/product.service.js";
 import TicketsController from "./tickets.controllers.js";
 
 import ProductsControllers from "./products.controllers.js";
+import UsersControllers from "./users.controllers.js"
 import { CustomError } from "../utils/CustomError.js";
 import { cartIdError, productIdError, permissionsError} from "../utils/CauseMessageError.js";
 import EnumsError from "../utils/EnumsError.js";
@@ -223,9 +224,10 @@ export default class CartManager {
 
     static async postPurchaser(req) {
         const { cid } = req.params;
+        const userCurrent = await UsersControllers.getById(req.user.id);
         const email = req.user.email;
-        const cartId = req.user.cartId;
-        const cartFind = cartId.find((e) => e.cartId === cid);
+        const cartId = userCurrent.cartId;
+        const cartFind = cartId.find((e) => e.cartId.toString() === cid);
         if (!cartFind) {
             CustomError.create(
                 {

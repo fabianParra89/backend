@@ -1,0 +1,41 @@
+
+<article>
+    <header>
+        <h1>Compra confirmada 😁</h1>
+        <a href="/products" role="button">productos</a>
+    </header>
+    <p><strong>Nombre:</strong> {{user.first_name}}</p>
+    <p><strong>Apellido:</strong> {{user.last_name}}</p>
+    <p><strong>Correo:</strong> {{user.email}}</p>
+    <p><strong>Edad:</strong> {{user.age}}</p>
+    <p><strong>Rol:</strong> {{user.role}}</p>
+    <footer>
+        <a href="/api/auth/logout" role="button">Salir</a>
+    </footer>
+</article>
+
+<article>
+    <div>
+        <h3>Su compra por un valor de ${{ticket.amount}} se ha completado correctamente, el codigo de la commpra es {{ticket.code}}</h3>
+        {{!-- <table >
+            <thead>
+                <tr >
+                    <th scope="col">producto</th>
+                    <th scope="col">cantidad</th>
+                    <th scope="col">precio</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+
+                <tr>
+                    <th scope="row">{{this.fullname}}</th>
+                    <td>{{this.email}}</td>
+                    <td>{{this.role}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table> --}}
+    </div>
+</article>

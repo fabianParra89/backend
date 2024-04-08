@@ -73,7 +73,7 @@ router.get('/auth/logout', authMiddleware('jwt'), async (req, res) => {
 router.put('/users/premium/:uid', authMiddleware('jwt'), authRolesMiddleware(['admin']),  async (req, res, next) => {
   try {
     const { params: { uid } } = req;
-    const user = await UserController.updateById(uid);
+    const user = await UserController.updateRoleById(uid);
     res.status(200).json(user);
   } catch (error) {
     next(error);
@@ -98,6 +98,16 @@ router.delete('/users' , authMiddleware('jwt'), async (req, res, next) => {
       next(error);
   }
 
+});
+
+router.post('/users/updateUser/:uid', async (req, res, next) => {
+  try {
+    const { params: { uid } } = req;
+    const user = await UserController.updateById(uid, req.body);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

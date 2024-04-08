@@ -116,7 +116,24 @@ export default class UserController {
         return user;
     }
 
-    static async updateById(id) {
+    static async updateById(id, data) {
+        const user = await UsersService.getById(id);
+        if (!user) {
+            CustomError.create(
+                {
+                    name: 'Usuario no existe',
+                    cause: userIdError(id),
+                    message: 'Error al intentar buscar un usuario por id',
+                    code: EnumsError.NOT_FOUND_ERROR,
+                }
+            )
+        }
+
+        await UsersService.updateById(id, data);
+        return await UsersService.getById(id);
+    }
+
+    static async updateRoleById(id) {
         const user = await UsersService.getById(id);
         if (!user) {
             CustomError.create(
