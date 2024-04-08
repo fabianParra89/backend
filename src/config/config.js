@@ -7,7 +7,7 @@ export default{
     jwt_secret: process.env.JWT_SECRET,
     jwt_secret_recovery: process.env.JWT_SECRET_RECOVERY,
     url_base: process.env.URL_BASE + process.env.PORT + '/api',
-    url_basePaginate: process.env.URL_BASE  + '/api',
+    url_basePaginate: process.env.URL_BASE,
     url_base_recovery: process.env.URL_BASE + process.env.PORT,
     clientID: process.env.CLIENT_ID_GITHUB ,
     clientSecret: process.env.CLIENT_SECRET_GITHUB ,
